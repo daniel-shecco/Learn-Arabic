@@ -1,9 +1,9 @@
 // Offline support: cache the app shell; network-first so updates arrive promptly.
-const CACHE = 'lingua-path-v2';
+const CACHE = 'lingua-path-v3';
 const SHELL = [
   './', './index.html', './css/app.css', './manifest.webmanifest', './icons/icon.svg', './icons/icon-192.webp', './icons/icon-512.webp', './icons/apple-touch-icon.png',
   './js/app.js', './js/text.js', './js/srs.js', './js/state.js', './js/gamify.js', './js/session.js',
-  './js/speech.js', './js/sfx.js', './js/ai.js',
+  './js/speech.js', './js/sfx.js', './js/ai.js', './js/native.js', './js/vendor/capacitor.js',
   './js/ui/dom.js', './js/ui/exercises.js', './js/ui/player.js', './js/ui/keyboard.js', './js/ui/tracer.js',
   './js/data/index.js', './js/data/ar/units.js', './js/data/ar/script.js', './js/data/it/units.js', './js/data/it/sounds.js',
 ];

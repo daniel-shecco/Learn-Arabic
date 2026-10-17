@@ -9,7 +9,8 @@ import {
   levelFromXp, levelTitle, unitProgress, isUnitUnlocked, isLessonUnlocked, isScriptUnlocked,
   scriptProgress, ACHIEVEMENTS, todayXp, xpHistory, checkAchievements,
 } from './gamify.js';
-import { speak, voicesFor, ttsSupported, asrSupported, listen, stopSpeaking, isNative } from './speech.js';
+import { speak, voicesFor, ttsSupported, asrSupported, listen, stopSpeaking, isNative as nativeSpeech } from './speech.js';
+import { isNative, plugin, platform } from './native.js';
 import { setSfx } from './sfx.js';
 import { arabicForms, shuffle } from './text.js';
 import { createTracer } from './ui/tracer.js';
@@ -524,7 +525,7 @@ function settingsPanel() {
   const toggle = (val, onchange) => h('input', { type: 'checkbox', checked: val, onchange: (e) => onchange(e.target.checked) });
 
   const voiceSel = (code) => {
-    if (isNative) return h('small.muted', `Uses your phone's ${LANGS[code].name} voice. No sound? Install it in your phone's text-to-speech settings.`);
+    if (nativeSpeech) return h('small.muted', `Uses your phone's ${LANGS[code].name} voice. No sound? Install it in your phone's text-to-speech settings.`);
     const vs = voicesFor(COURSES[code].meta.tts);
     if (!vs.length) return h('small.warn', `No ${LANGS[code].name} voice found on this device. Install one in your OS speech settings for audio.`);
     return select(s.voices[code] || '', [['', 'Automatic'], ...vs.map((v) => [v.name, `${v.name} (${v.lang})`])], (v) => set((x) => { x.voices[code] = v; }));
@@ -593,28 +594,28 @@ if (isNative) {
 
 /** Native app chrome: Android back button and status bar colours. */
 function setupNativeShell() {
-  const Cap = window.Capacitor;
-  const App = Cap.registerPlugin('App');
-  const StatusBar = Cap.registerPlugin('StatusBar');
+  const App = plugin('App');
+  const StatusBar = plugin('StatusBar');
   document.documentElement.classList.add('native');
 
-  App.addListener('backButton', () => {
+  App?.addListener('backButton', () => {
     const modalClose = document.querySelector('.modal-wrap .modal-close');
     if (modalClose) return modalClose.click();
     const quit = document.querySelector('.player-head .icon-btn');
     if (quit) return quit.click();
     if (tab !== 'learn') { tab = 'learn'; render(); return; }
-    App.minimizeApp().catch(() => {});
+    App.minimizeApp?.().catch(() => {});
   });
   // A new day may have started while the app sat in the background.
-  App.addListener('resume', () => { if (lang() && !document.querySelector('.player, .modal-wrap')) render(); });
+  App?.addListener('resume', () => { if (lang() && !document.querySelector('.player, .modal-wrap')) render(); });
 
   const paintStatusBar = () => {
+    if (!StatusBar) return;
     const bg = getComputedStyle(document.body).backgroundColor;
     const dark = document.documentElement.dataset.theme === 'dark'
       || (!document.documentElement.dataset.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
     StatusBar.setStyle({ style: dark ? 'DARK' : 'LIGHT' }).catch(() => {});
-    if (Cap.getPlatform() === 'android') StatusBar.setBackgroundColor({ color: rgbToHex(bg) }).catch(() => {});
+    if (platform() === 'android') StatusBar.setBackgroundColor({ color: rgbToHex(bg) }).catch(() => {});
   };
   paintStatusBar();
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paintStatusBar);

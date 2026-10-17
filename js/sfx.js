@@ -1,13 +1,14 @@
 // Tiny synthesised sound effects (no audio files) and confetti.
+import { plugin } from './native.js';
+
 let ctx;
 let enabled = true;
 
 // Vibration feedback in the native app.
-const Cap = typeof window !== 'undefined' ? window.Capacitor : null;
-const Haptics = Cap?.isNativePlatform?.() ? Cap.registerPlugin('Haptics') : null;
+const Haptics = plugin('Haptics');
 function buzz(type) {
   if (!Haptics || !enabled) return;
-  (type === 'tap' ? Haptics.impact({ style: 'LIGHT' }) : Haptics.notification({ type })).catch(() => {});
+  Promise.resolve(type === 'tap' ? Haptics.impact({ style: 'LIGHT' }) : Haptics.notification({ type })).catch(() => {});
 }
 
 export function setSfx(on) { enabled = on; }

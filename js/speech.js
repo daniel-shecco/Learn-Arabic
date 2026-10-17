@@ -3,10 +3,12 @@
 
 // Inside the Capacitor app (Android / iOS), the WebView's speech APIs are
 // missing or unreliable, so we use the native speech engines via plugins.
-const Cap = typeof window !== 'undefined' ? window.Capacitor : null;
-export const isNative = !!Cap?.isNativePlatform?.();
-const NativeTTS = isNative ? Cap.registerPlugin('TextToSpeech') : null;
-const NativeASR = isNative ? Cap.registerPlugin('SpeechRecognition') : null;
+import { isNative as inApp, plugin } from './native.js';
+
+const NativeTTS = plugin('TextToSpeech');
+const NativeASR = plugin('SpeechRecognition');
+// Use native speech only when both plugins are really there.
+export const isNative = inApp && !!NativeTTS && !!NativeASR;
 
 const synth = typeof window !== 'undefined' ? window.speechSynthesis : null;
 let voices = [];
@@ -131,7 +133,7 @@ function nativeListen(lang, { onInterim, maxMs = 8000 } = {}) {
         clearTimeout(maxTimer);
         clearTimeout(silence);
         await NativeASR.stop().catch(() => {});
-        handles.forEach((h) => h.remove?.());
+        handles.forEach((h) => Promise.resolve(h.remove?.()).catch(() => {}));
         resolve({ transcripts: matches, error: matches.length ? undefined : error });
       };
       stopFn = () => finish('no-speech');
