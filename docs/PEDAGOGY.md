@@ -41,7 +41,8 @@ Lingua Path is built around one question: **what gets an adult beginner talking,
 * **Four positional forms** for every letter, plus explicit teaching of the six non-connecting letters.
 * **Multi-sensory practice**: hear → recognise → read syllables → read words → find letters in words → **trace** (handwriting pad, scored by shape overlap) → **write from memory** (guide hidden, then revealed for comparison) → **spell words with an alphabetical on-screen keyboard** (dictation).
 * **Transliteration scaffolding that fades.** In *Auto* mode, transliteration is shown until half the alphabet track is done. After that it's hidden behind a tap, to push you to read the real script. Every course item is **fully vowelled**.
-* **Variety:** Modern Standard Arabic (فُصْحَى), understood across the Arab world and the form used in writing. Notes flag everyday-speech differences where useful.
+* **Variety: spoken first, standard alongside.** Arabic is *diglossic*: people speak a regional dialect but read and write Modern Standard Arabic (فُصْحَى). The course goal is conversation, so all lessons, dialogues, role-plays and the AI partner use **Levantine Arabic** (شامي: Lebanon, Syria, Jordan, Palestine), one of the most widely understood dialects. Every item also shows its **standard Arabic** form (📜), and standard answers are accepted, so the learner builds a bridge to reading and writing rather than two separate languages. The alphabet track teaches the script with standard spellings, and grammar cards contrast spoken and standard patterns (b-/ʿam/raḥ vs. standard verb forms).
+* **Pronunciation honesty.** In Levantine speech ق is a glottal stop (قهوة = *ʾahwe*), ث becomes t/s and ذ becomes d/z. Transliteration shows the real spoken sound. Phone voices only speak standard Arabic, so the app respells ق for the voice wherever it is pronounced as a glottal stop.
 
 ### Italian: sounds and spelling
 

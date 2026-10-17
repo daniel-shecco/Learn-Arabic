@@ -37,13 +37,24 @@ for (const lang of ['ar', 'it']) {
         if (lang === 'ar') {
           assert.ok(it.tr, `${id} translit`);
           assert.ok(isArabic(it.t), `${id} is Arabic`);
-          assert.notEqual(stripArabicDiacritics(it.t), it.t, `${id} is vowelled`);
         }
         ids.add(id);
       }
       for (const l of u.dialogue.lines) if (lang === 'ar') assert.ok(l.tr, `${u.id} dialogue translit`);
     }
     assert.ok(ids.size >= 200, `${lang} has ${ids.size} items`);
+    if (lang === 'ar') {
+      // Vowel marks wherever short vowels occur. Words made only of consonants and
+      // long vowels (شاي shāy, باص bāṣ) are fully readable without them.
+      const items = [...ids].map((id) => c.items[id]);
+      const vowelled = items.filter((it) => stripArabicDiacritics(it.t) !== it.t).length;
+      assert.ok(vowelled / items.length >= 0.9, `only ${vowelled}/${items.length} Arabic items are vowelled`);
+      for (const it of items) {
+        if (it.msa) assert.ok(isArabic(it.msa.t) && it.msa.tr, `${it.id} standard form`);
+        assert.ok(it.alt.includes(it.msa?.t ?? it.alt[0]) || !it.msa, `${it.id} accepts the standard form`);
+      }
+      assert.ok(items.filter((it) => it.msa).length >= 120, 'most items show a different standard Arabic form');
+    }
   });
 
   test(`${lang}: every lesson builds with valid exercises (with and without speaking)`, () => {

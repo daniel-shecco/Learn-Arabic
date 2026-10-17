@@ -1,7 +1,8 @@
 // Lesson player: runs a queue of exercises with check/feedback/continue flow,
 // re-queues mistakes, awards XP and records SRS grades.
 import { h, clear, tl, modal } from './dom.js';
-import { RENDERERS } from './exercises.js';
+import { RENDERERS, msaEl } from './exercises.js';
+import { spokenForm } from '../data/index.js';
 import { speak, stopSpeaking } from '../speech.js';
 import { sfx, confetti } from '../sfx.js';
 import { XP, checkAchievements } from '../gamify.js';
@@ -71,7 +72,7 @@ export function runSession(app, { title, exercises, record, onExit }) {
 
   const ctx = {
     lang, course, store,
-    say: (text, { slow } = {}) => speak(text, { langs: course.meta.tts, rate: (slow ? 0.6 : 1) * settings.rate, voice: settings.voices[lang] }),
+    say: (text, { slow } = {}) => speak(spokenForm(lang, text), { langs: course.meta.tts, rate: (slow ? 0.6 : 1) * settings.rate, voice: settings.voices[lang] }),
     showTranslit: () => app.showTranslit(),
     ready(fn) { checkFn = fn; mainBtn.disabled = !fn; },
     submit() { onMain(); },
@@ -176,6 +177,7 @@ export function runSession(app, { title, exercises, record, onExit }) {
         h('div.target-row', tl(r.solution.t, /[؀-ۿ]/.test(r.solution.t) ? 'ar' : lang, 'md'),
           h('button.audio-btn', { type: 'button', onclick: () => ctx.say(r.solution.t) }, '🔊')),
         r.solution.tr ? h('div.translit', r.solution.tr) : null,
+        msaEl(ctx, r.solution.msa),
         r.solution.en ? h('div.small', r.solution.en) : null)
       : null;
     const extra = r.extra ? h('div.row', r.extra.map((w) => h('button.btn.ghost.small', { type: 'button', onclick: () => ctx.say(w) }, '🔊 ', w))) : null;

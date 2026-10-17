@@ -1,127 +1,134 @@
-// Arabic course — Modern Standard Arabic (فُصْحَى), CEFR A1 communicative syllabus.
-// Fully vowelled (with harakat) so the learner can read every word they hear.
-// Item tuples: [arabic, transliteration, english, emoji?, note?, alternatives?]
-// Dialogue lines: [speaker, arabic, transliteration, english]
-// Roleplay turns: { p: [arabic, translit, english], cue, a: [accepted arabic], atr: translit of a[0] }
+// Arabic course — spoken Levantine Arabic (شامي: Lebanon, Syria, Jordan, Palestine)
+// with Modern Standard Arabic (فُصْحَى) shown alongside for reading and writing.
+// CEFR A1 communicative syllabus.
+//
+// Item tuples: [levantine, transliteration, english, emoji?, note?, extra?]
+//   extra = { msa: [standard arabic, transliteration], alt: [other accepted answers] }
+//   The MSA form is always accepted as a correct answer too.
+// Dialogue lines: [speaker, levantine, transliteration, english]
+// Roleplay turns: { p: [levantine, translit, english], cue, a: [accepted answers], atr: translit of a[0] }
+//
+// Pronunciation: in everyday Levantine speech ق is a glottal stop (ʾ), ث is t/s and
+// ذ is d/z. Spellings follow common Levantine usage; transliteration shows the sound.
 
 export default [
   {
     id: 'greetings',
-    title: 'مَرْحَبًا',
+    title: 'مَرْحَبا',
     subtitle: 'Greetings & introductions',
     icon: '👋',
     goal: 'I can greet people, say my name and ask how someone is.',
     words: [
-      ['مَرْحَبًا', 'marḥaban', 'hello', '👋'],
-      ['أَهْلًا', 'ahlan', 'hi / welcome', '🙂'],
-      ['صَبَاحُ الْخَيْرِ', 'ṣabāḥu l-khayr', 'good morning', '🌅', 'Reply: صَبَاحُ النُّورِ (ṣabāḥu n-nūr) — “morning of light”.'],
-      ['مَسَاءُ الْخَيْرِ', 'masāʾu l-khayr', 'good evening', '🌆', 'Reply: مَسَاءُ النُّورِ (masāʾu n-nūr).'],
-      ['مَعَ السَّلَامَةِ', 'maʿa s-salāma', 'goodbye', '🚶', 'Literally “with safety”.'],
-      ['نَعَمْ', 'naʿam', 'yes', '✅'],
-      ['لَا', 'lā', 'no', '❌'],
-      ['شُكْرًا', 'shukran', 'thank you', '🙏'],
-      ['عَفْوًا', 'ʿafwan', "you're welcome / excuse me", '😊'],
-      ['أَنَا', 'anā', 'I', '🙋'],
-      ['أَنْتَ', 'anta', 'you (to a man)', '👉', 'To a woman: أَنْتِ (anti).'],
-      ['أَنْتِ', 'anti', 'you (to a woman)', '👉'],
-      ['اِسْم', 'ism', 'name', '📛'],
+      ['مَرْحَبا', 'marḥaba', 'hello', '👋', null, { msa: ['مَرْحَبًا', 'marḥaban'] }],
+      ['أَهْلا', 'ahla', 'hi / welcome', '🙂', null, { msa: ['أَهْلًا', 'ahlan'] }],
+      ['صَباح الخَير', 'ṣabāḥ il-khēr', 'good morning', '🌅', 'Reply: صَباح النّور (ṣabāḥ in-nūr), “morning of light”.', { msa: ['صَبَاحُ الْخَيْرِ', 'ṣabāḥu l-khayr'] }],
+      ['مَسا الخَير', 'masa l-khēr', 'good evening', '🌆', 'Reply: مَسا النّور (masa n-nūr).', { msa: ['مَسَاءُ الْخَيْرِ', 'masāʾu l-khayr'] }],
+      ['مَعَ السَّلامة', 'maʿ is-salāme', 'goodbye', '🚶', 'Literally “with safety”. Very casual: باي (bāy)!', { msa: ['مَعَ السَّلَامَةِ', 'maʿa s-salāma'] }],
+      ['إي', 'ē', 'yes', '✅', 'Also أَيْوَا (aywa). Formal: نَعَم.', { msa: ['نَعَمْ', 'naʿam'], alt: ['أيوا'] }],
+      ['لَأ', 'laʾ', 'no', '❌', null, { msa: ['لَا', 'lā'], alt: ['لا'] }],
+      ['شُكْرًا', 'shukran', 'thank you', '🙏', 'In Lebanon you will also hear مِرسي (merci).', { alt: ['مرسي'] }],
+      ['عَفْوًا', 'ʿafwan', "you're welcome / excuse me", '😊', 'Also: وَلَو (walaw), “don’t mention it”.', { alt: ['ولو'] }],
+      ['أَنا', 'ana', 'I', '🙋', null, { msa: ['أَنَا', 'anā'] }],
+      ['إِنْتَ', 'inte', 'you (to a man)', '👉', null, { msa: ['أَنْتَ', 'anta'] }],
+      ['إِنْتِ', 'inti', 'you (to a woman)', '👉', null, { msa: ['أَنْتِ', 'anti'] }],
+      ['اِسِم', 'ism', 'name', '📛', null, { msa: ['اِسْم', 'ism'], alt: ['اسم'] }],
     ],
     phrases: [
-      ['السَّلَامُ عَلَيْكُمْ', 'as-salāmu ʿalaykum', 'Peace be upon you (hello)', '🕊️', 'The universal greeting across the Arab world.', ['السلام عليكم']],
-      ['وَعَلَيْكُمُ السَّلَامُ', 'wa-ʿalaykumu s-salām', 'And upon you peace (the reply)', '🕊️'],
-      ['مَا اسْمُكَ؟', 'mā smuka?', "What's your name? (to a man)", '❓', 'To a woman: مَا اسْمُكِ؟ (mā smuki?)', ['ما اسمك']],
-      ['اِسْمِي سَامِي.', 'ismī Sāmī.', 'My name is Sami.', '📛', '-ī at the end means “my”.'],
-      ['تَشَرَّفْنَا!', 'tasharrafnā!', 'Nice to meet you!', '🤝', 'Literally “we are honoured”.'],
-      ['كَيْفَ حَالُكَ؟', 'kayfa ḥāluka?', 'How are you? (to a man)', '💬', 'To a woman: كَيْفَ حَالُكِ؟ (kayfa ḥāluki?)', ['كيف حالك']],
-      ['أَنَا بِخَيْرٍ، الْحَمْدُ لِلَّهِ.', 'anā bi-khayr, al-ḥamdu li-llāh.', "I'm well, thank God.", '😊', 'Arabs very often add الْحَمْدُ لِلَّهِ — “praise be to God”.', ['بخير الحمد لله', 'انا بخير']],
-      ['وَأَنْتَ؟', 'wa-anta?', 'And you? (to a man)', '↩️', 'To a woman: وَأَنْتِ؟ (wa-anti?)', ['وانت']],
+      ['السَّلامُ عَلَيكُم', 'as-salāmu ʿalēkum', 'Peace be upon you (hello)', '🕊️', 'Used everywhere, in any register.', { msa: ['السَّلَامُ عَلَيْكُمْ', 'as-salāmu ʿalaykum'] }],
+      ['وعَلَيكُم السَّلام', 'w ʿalēkum is-salām', 'And upon you peace (the reply)', '🕊️', null, { msa: ['وَعَلَيْكُمُ السَّلَامُ', 'wa-ʿalaykumu s-salām'] }],
+      ['شو اسْمَك؟', 'shu ismak?', "What's your name? (to a man)", '❓', 'To a woman: شو اسْمِك؟ (shu ismik?)', { msa: ['مَا اسْمُكَ؟', 'mā smuka?'], alt: ['شو اسمك'] }],
+      ['اِسْمي سامي.', 'ismi Sāmi.', 'My name is Sami.', '📛', '-i at the end means “my”.', { msa: ['اِسْمِي سَامِي', 'ismī Sāmī'], alt: ['أنا سامي'] }],
+      ['تْشَرَّفْنا!', 'tsharrafna!', 'Nice to meet you!', '🤝', 'Literally “we are honoured”.', { msa: ['تَشَرَّفْنَا', 'tasharrafnā'] }],
+      ['كِيفَك؟', 'kīfak?', 'How are you? (to a man)', '💬', 'To a woman: كِيفِك؟ (kīfik?)', { msa: ['كَيْفَ حَالُكَ؟', 'kayfa ḥāluka?'], alt: ['كيفك'] }],
+      ['مْنيح، الحَمْدِلله.', 'mnīḥ, il-ḥamdilla.', "I'm good, thank God.", '😊', 'A woman says مْنيحة (mnīḥa). Also very common: تَمام (tamām), “fine”.', { msa: ['أَنَا بِخَيْرٍ، الْحَمْدُ لِلَّهِ', 'anā bi-khayr, al-ḥamdu li-llāh'], alt: ['منيحة الحمدلله', 'تمام', 'منيح'] }],
+      ['وإِنْتَ؟', 'w inte?', 'And you? (to a man)', '↩️', 'To a woman: وإِنْتِ؟ (w inti?)', { msa: ['وَأَنْتَ؟', 'wa-anta?'], alt: ['وانت'] }],
+      ['أَهْلا وسَهْلا!', 'ahla w sahla!', 'Welcome!', '🤗', null, { msa: ['أَهْلًا وَسَهْلًا', 'ahlan wa-sahlan'] }],
     ],
     grammar: {
-      title: 'Talking to a man or a woman — and no "am/is/are"',
-      body: `<p>Arabic marks whether you're speaking <b>to a man or a woman</b>:</p>
-<table><tr><th></th><th>to a man</th><th>to a woman</th></tr>
-<tr><td>you</td><td>أَنْتَ <i>anta</i></td><td>أَنْتِ <i>anti</i></td></tr>
-<tr><td>your name</td><td>اسْمُكَ <i>-ka</i></td><td>اسْمُكِ <i>-ki</i></td></tr>
-<tr><td>how are you?</td><td>كَيْفَ حَالُكَ؟</td><td>كَيْفَ حَالُكِ؟</td></tr></table>
-<p>The difference is just the short vowel: <b>fatḥa</b> ( َ = a) for men, <b>kasra</b> ( ِ = i) for women.</p>
-<p><b>No verb “to be” in the present:</b> أَنَا بِخَيْرٍ = “I [am] well”, أَنَا سَامِي = “I [am] Sami”.</p>`,
+      title: 'Spoken vs standard Arabic — and talking to a man or a woman',
+      body: `<p>Arabs speak a <b>dialect</b> at home and on the street, and read and write <b>Modern Standard Arabic</b> (فُصْحَى). This course teaches <b>Levantine</b> (شامي) for speaking, and shows the standard form under each item (📜) so your reading keeps growing.</p>
+<table><tr><th></th><th>spoken (Levantine)</th><th>standard</th></tr>
+<tr><td>How are you?</td><td>كِيفَك؟ <i>kīfak</i></td><td>كَيْفَ حَالُكَ؟</td></tr>
+<tr><td>What's your name?</td><td>شو اسْمَك؟ <i>shu ismak</i></td><td>مَا اسْمُكَ؟</td></tr>
+<tr><td>yes</td><td>إي <i>ē</i></td><td>نَعَمْ</td></tr></table>
+<p><b>To a man or a woman:</b> the ending changes — <b>-ak</b> for a man, <b>-ik</b> for a woman: كِيفَك <i>kīfak</i> / كِيفِك <i>kīfik</i>; إِنْتَ <i>inte</i> / إِنْتِ <i>inti</i>.</p>
+<p><b>No “am / is / are”</b> in the present: أَنا مْنيح = “I [am] good”.</p>`,
     },
     dialogue: {
-      scene: 'Layla meets Karim at a conference.',
+      scene: 'Layla meets Karim at a party in Beirut.',
       lines: [
-        ['Layla', 'السَّلَامُ عَلَيْكُمْ!', 'as-salāmu ʿalaykum!', 'Hello! (Peace be upon you)'],
-        ['Karim', 'وَعَلَيْكُمُ السَّلَامُ!', 'wa-ʿalaykumu s-salām!', 'And upon you peace!'],
-        ['Layla', 'مَا اسْمُكَ؟', 'mā smuka?', "What's your name?"],
-        ['Karim', 'اِسْمِي كَرِيم. وَأَنْتِ؟', 'ismī Karīm. wa-anti?', "My name is Karim. And you?"],
-        ['Layla', 'اِسْمِي لَيْلَى. تَشَرَّفْنَا!', 'ismī Laylā. tasharrafnā!', 'My name is Layla. Nice to meet you!'],
-        ['Karim', 'تَشَرَّفْنَا! كَيْفَ حَالُكِ؟', 'tasharrafnā! kayfa ḥāluki?', 'Nice to meet you! How are you?'],
-        ['Layla', 'بِخَيْرٍ، الْحَمْدُ لِلَّهِ.', 'bi-khayr, al-ḥamdu li-llāh.', 'Well, thank God.'],
+        ['Layla', 'مَرْحَبا!', 'marḥaba!', 'Hello!'],
+        ['Karim', 'أَهْلا! شو اسْمِك؟', 'ahla! shu ismik?', "Hi! What's your name?"],
+        ['Layla', 'اِسْمي لَيلى. وإِنْتَ؟', 'ismi Layla. w inte?', 'My name is Layla. And you?'],
+        ['Karim', 'أَنا كَريم. تْشَرَّفْنا!', 'ana Karīm. tsharrafna!', "I'm Karim. Nice to meet you!"],
+        ['Layla', 'تْشَرَّفْنا. كِيفَك؟', 'tsharrafna. kīfak?', 'Nice to meet you. How are you?'],
+        ['Karim', 'مْنيح، الحَمْدِلله. وإِنْتِ؟', 'mnīḥ, il-ḥamdilla. w inti?', "Good, thank God. And you?"],
+        ['Layla', 'تَمام! أَهْلا وسَهْلا.', 'tamām! ahla w sahla.', 'Fine! Welcome.'],
       ],
       questions: [
         { q: "What is the man's name?", options: ['Karim', 'Sami', 'Adam'], a: 0 },
-        { q: 'Why does Karim say “wa-anti” and not “wa-anta”?', options: ['He is speaking to a woman', 'It is more polite', 'It is a question'], a: 0 },
+        { q: 'Why does Karim say “shu ismik” and not “shu ismak”?', options: ['He is speaking to a woman', 'It is more polite', 'It is a question'], a: 0 },
       ],
     },
     roleplay: {
       scene: 'You meet Omar in a café in Amman.',
       turns: [
-        { p: ['السَّلَامُ عَلَيْكُمْ!', 'as-salāmu ʿalaykum!', 'Peace be upon you!'], cue: 'Reply to the greeting.', a: ['وَعَلَيْكُمُ السَّلَامُ'], atr: 'wa-ʿalaykumu s-salām' },
-        { p: ['مَا اسْمُكَ؟', 'mā smuka?', "What's your name?"], cue: 'Say: My name is Adam.', a: ['اِسْمِي آدَم', 'أَنَا آدَم'], atr: 'ismī Ādam' },
-        { p: ['تَشَرَّفْنَا! كَيْفَ حَالُكَ؟', 'tasharrafnā! kayfa ḥāluka?', 'Nice to meet you! How are you?'], cue: "Say you're well, thank God.", a: ['أَنَا بِخَيْرٍ، الْحَمْدُ لِلَّهِ', 'بِخَيْرٍ، الْحَمْدُ لِلَّهِ', 'بِخَيْرٍ'], atr: 'anā bi-khayr, al-ḥamdu li-llāh' },
-        { p: ['مَعَ السَّلَامَةِ!', 'maʿa s-salāma!', 'Goodbye!'], cue: 'Say goodbye.', a: ['مَعَ السَّلَامَةِ'], atr: 'maʿa s-salāma' },
+        { p: ['السَّلامُ عَلَيكُم!', 'as-salāmu ʿalēkum!', 'Peace be upon you!'], cue: 'Reply to the greeting.', a: ['وعَلَيكُم السَّلام', 'وَعَلَيْكُمُ السَّلَامُ'], atr: 'w ʿalēkum is-salām' },
+        { p: ['شو اسْمَك؟', 'shu ismak?', "What's your name?"], cue: 'Say: My name is Adam.', a: ['اِسْمي آدَم', 'أَنا آدَم', 'اِسْمِي آدَم'], atr: 'ismi Ādam' },
+        { p: ['تْشَرَّفْنا! كِيفَك؟', 'tsharrafna! kīfak?', 'Nice to meet you! How are you?'], cue: "Say you're good, thank God.", a: ['مْنيح، الحَمْدِلله', 'تَمام، الحَمْدِلله', 'مْنيح', 'تَمام', 'أَنَا بِخَيْرٍ، الْحَمْدُ لِلَّهِ'], atr: 'mnīḥ, il-ḥamdilla' },
+        { p: ['يَلّا، مَعَ السَّلامة!', 'yalla, maʿ is-salāme!', 'Right then, goodbye!'], cue: 'Say goodbye.', a: ['مَعَ السَّلامة', 'باي', 'مَعَ السَّلَامَةِ'], atr: 'maʿ is-salāme' },
       ],
     },
   },
   {
     id: 'survival',
-    title: 'لَا أَفْهَمُ',
+    title: 'ما فْهِمْت',
     subtitle: 'Survival phrases',
     icon: '🛟',
     goal: "I can manage when I don't understand: ask to repeat, slow down, or explain.",
     words: [
-      ['مِنْ فَضْلِكَ', 'min faḍlika', 'please (to a man)', '🙏', 'To a woman: مِنْ فَضْلِكِ (min faḍliki).'],
-      ['آسِف', 'āsif', 'sorry (said by a man)', '😔', 'A woman says آسِفَة (āsifa).'],
-      ['طَيِّب', 'ṭayyib', 'okay / good', '👍'],
-      ['طَبْعًا', 'ṭabʿan', 'of course', '👌'],
-      ['رُبَّمَا', 'rubbamā', 'maybe', '🤔'],
-      ['جِدًّا', 'jiddan', 'very', '➕'],
-      ['قَلِيلًا', 'qalīlan', 'a little', '🤏'],
-      ['فَقَطْ', 'faqaṭ', 'only', '☝️'],
-      ['هُنَا', 'hunā', 'here', '📍'],
-      ['هُنَاكَ', 'hunāka', 'there', '👉'],
-      ['لُغَة', 'lugha', 'language', '🗣️'],
-      ['لَكِنْ', 'lākin', 'but', '↔️', 'Written with a “hidden” long ā: lā-kin.'],
-      ['أَيْضًا', 'ayḍan', 'also', '➕'],
+      ['لَو سَمَحْت', 'law samaḥt', 'please (to a man)', '🙏', 'To a woman: لَو سَمَحْتي (law samaḥti). Also مِن فَضْلَك (min faḍlak).', { msa: ['مِنْ فَضْلِكَ', 'min faḍlika'], alt: ['من فضلك', 'لو سمحتي'] }],
+      ['آسِف', 'āsif', 'sorry (said by a man)', '😔', 'A woman says آسْفة (āsfe).', { msa: ['آسِف', 'āsif'] }],
+      ['مَعْلِش', 'maʿlesh', "never mind / it's okay / sorry", '🤷', 'One of the most useful words in the Levant.', { msa: ['لَا بَأْسَ', 'lā baʾs'] }],
+      ['طَيِّب', 'ṭayyeb', 'okay', '👍', null, { msa: ['طَيِّب', 'ṭayyib'] }],
+      ['أَكيد', 'akīd', 'of course / sure', '👌', null, { msa: ['طَبْعًا', 'ṭabʿan'] }],
+      ['يِمْكِن', 'yimkin', 'maybe', '🤔', null, { msa: ['رُبَّمَا', 'rubbamā'] }],
+      ['كْتير', 'ktīr', 'very / a lot', '➕', 'Comes AFTER adjectives: مْنيح كْتير, “very good”.', { msa: ['جِدًّا', 'jiddan'] }],
+      ['شْوَيّ', 'shwayy', 'a little', '🤏', null, { msa: ['قَلِيلًا', 'qalīlan'], alt: ['شوي'] }],
+      ['بَسّ', 'bass', 'only / but / enough!', '☝️', null, { msa: ['فَقَطْ', 'faqaṭ'], alt: ['بس'] }],
+      ['هَون', 'hōn', 'here', '📍', null, { msa: ['هُنَا', 'hunā'] }],
+      ['هونيك', 'hōnīk', 'there', '👉', null, { msa: ['هُنَاكَ', 'hunāka'] }],
+      ['لُغَة', 'lugha', 'language', '🗣️', null, { msa: ['لُغَة', 'lugha'] }],
+      ['كَمان', 'kamān', 'also / again', '➕', null, { msa: ['أَيْضًا', 'ayḍan'] }],
     ],
     phrases: [
-      ['لَا أَفْهَمُ.', 'lā afham.', "I don't understand.", '🤷'],
-      ['أَعِدْ مِنْ فَضْلِكَ.', 'aʿid min faḍlika.', 'Repeat, please.', '🔁'],
-      ['بِبُطْءٍ مِنْ فَضْلِكَ.', 'bi-buṭʾ min faḍlika.', 'Slowly, please.', '🐢'],
-      ['هَلْ تَتَكَلَّمُ الْإِنْجِلِيزِيَّةَ؟', 'hal tatakallamu l-injilīziyya?', 'Do you speak English?', '🇬🇧'],
-      ['مَاذَا يَعْنِي هَذَا؟', 'mādhā yaʿnī hādhā?', 'What does this mean?', '📖'],
-      ['كَيْفَ تَقُولُ هَذَا بِالْعَرَبِيَّةِ؟', 'kayfa taqūlu hādhā bil-ʿarabiyya?', 'How do you say this in Arabic?', '💭'],
-      ['لَا أَعْرِفُ.', 'lā aʿrif.', "I don't know.", '🤷‍♀️'],
-      ['أَتَكَلَّمُ الْعَرَبِيَّةَ قَلِيلًا.', 'atakallamu l-ʿarabiyya qalīlan.', 'I speak Arabic a little.', '🤏'],
+      ['ما فْهِمْت.', 'mā fhimt.', "I didn't understand.", '🤷', 'Levantine uses the past tense here.', { msa: ['لَا أَفْهَمُ', 'lā afham'], alt: ['ما فهمت عليك'] }],
+      ['عيد لَو سَمَحْت.', 'ʿīd law samaḥt.', 'Repeat, please.', '🔁', null, { msa: ['أَعِدْ مِنْ فَضْلِكَ', 'aʿid min faḍlika'], alt: ['عيد'] }],
+      ['شْوَيّ شْوَيّ لَو سَمَحْت.', 'shwayy shwayy law samaḥt.', 'Slowly, please.', '🐢', null, { msa: ['بِبُطْءٍ مِنْ فَضْلِكَ', 'bi-buṭʾ min faḍlika'], alt: ['شوي شوي'] }],
+      ['بْتِحْكي إِنْجْليزي؟', 'btiḥki inglīzi?', 'Do you speak English?', '🇬🇧', 'حَكى (ḥaka) = to speak, in Levantine.', { msa: ['هَلْ تَتَكَلَّمُ الْإِنْجِلِيزِيَّةَ؟', 'hal tatakallamu l-injilīziyya?'] }],
+      ['شو يَعْني هاد؟', 'shu yaʿni hād?', 'What does this mean?', '📖', null, { msa: ['مَاذَا يَعْنِي هَذَا؟', 'mādhā yaʿnī hādhā?'] }],
+      ['كِيف بِتْقول هاد بالعَرَبي؟', 'kīf bitʾūl hād bil-ʿarabi?', 'How do you say this in Arabic?', '💭', null, { msa: ['كَيْفَ تَقُولُ هَذَا بِالْعَرَبِيَّةِ؟', 'kayfa taqūlu hādhā bil-ʿarabiyya?'] }],
+      ['ما بَعْرِف.', 'mā baʿrif.', "I don't know.", '🤷‍♀️', null, { msa: ['لَا أَعْرِفُ', 'lā aʿrif'] }],
+      ['بَحْكي عَرَبي شْوَيّ.', 'baḥki ʿarabi shwayy.', 'I speak a little Arabic.', '🤏', null, { msa: ['أَتَكَلَّمُ الْعَرَبِيَّةَ قَلِيلًا', 'atakallamu l-ʿarabiyya qalīlan'] }],
     ],
     grammar: {
-      title: 'Saying "not" and asking yes/no questions',
-      body: `<p><b>Negation:</b> put <b>لَا</b> (lā) before a present-tense verb.</p>
-<table><tr><td>أَفْهَمُ</td><td><i>afham</i></td><td>I understand</td></tr>
-<tr><td><b>لَا</b> أَفْهَمُ</td><td><i>lā afham</i></td><td>I don't understand</td></tr>
-<tr><td>أَعْرِفُ</td><td><i>aʿrif</i></td><td>I know</td></tr>
-<tr><td><b>لَا</b> أَعْرِفُ</td><td><i>lā aʿrif</i></td><td>I don't know</td></tr></table>
-<p><b>Yes/no questions:</b> start the sentence with <b>هَلْ</b> (hal): <span lang="ar">هَلْ تَتَكَلَّمُ الْعَرَبِيَّةَ؟</span> — “Do you speak Arabic?”</p>
-<p>Notice the Arabic question mark <b>؟</b> faces the other way, because Arabic is written right-to-left.</p>`,
+      title: '“Not”, questions, and the b- prefix',
+      body: `<p><b>Not:</b> put <b>ما</b> (mā) before a verb, and <b>مِش</b> (mish) before everything else:</p>
+<table><tr><td>ما بَعْرِف</td><td><i>mā baʿrif</i></td><td>I don't know</td></tr>
+<tr><td>ما فْهِمْت</td><td><i>mā fhimt</i></td><td>I didn't understand</td></tr>
+<tr><td>مِش مْنيح</td><td><i>mish mnīḥ</i></td><td>not good</td></tr></table>
+<p><b>Questions:</b> just raise your voice — no question word needed: بْتِحْكي عَرَبي؟ “You speak Arabic?” (Standard Arabic starts with هَلْ.)</p>
+<p><b>b- = present:</b> spoken verbs add <b>b-</b> for things you do (in general / habitually): بَحْكي <i>baḥki</i> “I speak”, بْتِحْكي <i>btiḥki</i> “you speak”. Standard Arabic has no b-: أَتَكَلَّمُ.</p>`,
     },
     dialogue: {
-      scene: 'A visitor asks a shopkeeper for help.',
+      scene: 'A visitor asks a shopkeeper for help in Damascus.',
       lines: [
-        ['Visitor', 'عَفْوًا، هَلْ تَتَكَلَّمُ الْإِنْجِلِيزِيَّةَ؟', 'ʿafwan, hal tatakallamu l-injilīziyya?', 'Excuse me, do you speak English?'],
-        ['Shopkeeper', 'لَا، آسِف. الْعَرَبِيَّةُ فَقَطْ.', 'lā, āsif. al-ʿarabiyyatu faqaṭ.', "No, sorry. Arabic only."],
-        ['Visitor', 'طَيِّب. أَتَكَلَّمُ الْعَرَبِيَّةَ قَلِيلًا.', 'ṭayyib. atakallamu l-ʿarabiyya qalīlan.', 'Okay. I speak Arabic a little.'],
-        ['Shopkeeper', 'مُمْتَاز! أَهْلًا وَسَهْلًا!', 'mumtāz! ahlan wa-sahlan!', 'Excellent! Welcome!'],
-        ['Visitor', 'بِبُطْءٍ مِنْ فَضْلِكَ.', 'bi-buṭʾ min faḍlika.', 'Slowly, please.'],
-        ['Shopkeeper', 'طَبْعًا! أَهْ-لًا وَ-سَهْ-لًا!', 'ṭabʿan! ah-lan wa-sah-lan!', 'Of course! Wel-come!'],
+        ['Visitor', 'عَفْوًا، بْتِحْكي إِنْجْليزي؟', 'ʿafwan, btiḥki inglīzi?', 'Excuse me, do you speak English?'],
+        ['Shopkeeper', 'لَأ، آسِف. بَسّ عَرَبي.', 'laʾ, āsif. bass ʿarabi.', "No, sorry. Only Arabic."],
+        ['Visitor', 'مَعْلِش. بَحْكي عَرَبي شْوَيّ.', 'maʿlesh. baḥki ʿarabi shwayy.', "No problem. I speak a little Arabic."],
+        ['Shopkeeper', 'بْتِجْنِن! أَهْلا وسَهْلا!', 'btijnin! ahla w sahla!', "Amazing! Welcome!"],
+        ['Visitor', 'شْوَيّ شْوَيّ لَو سَمَحْت.', 'shwayy shwayy law samaḥt.', 'Slowly, please.'],
+        ['Shopkeeper', 'أَكيد! أَهْ-لا وسَهْ-لا!', 'akīd! ah-la w sah-la!', 'Of course! Wel-come!'],
       ],
       questions: [
         { q: 'Does the shopkeeper speak English?', options: ['No, only Arabic', 'Yes, a little', 'Yes, fluently'], a: 0 },
@@ -129,124 +136,124 @@ export default [
       ],
     },
     roleplay: {
-      scene: 'A station employee answers you very fast.',
+      scene: 'A bus driver answers you very fast.',
       turns: [
-        { p: ['الْقِطَارُ يَصِلُ فِي السَّاعَةِ التَّاسِعَةِ وَالرُّبْعِ.', 'al-qiṭāru yaṣilu fī s-sāʿati t-tāsiʿati wa-r-rubʿ.', 'The train arrives at quarter past nine.'], cue: "Say sorry, you don't understand.", a: ['آسِف، لَا أَفْهَمُ', 'لَا أَفْهَمُ', 'آسِفَة، لَا أَفْهَمُ'], atr: 'āsif, lā afham' },
-        { p: ['آه، آسِف!', 'āh, āsif!', 'Oh, sorry!'], cue: 'Ask them to repeat slowly, please.', a: ['أَعِدْ بِبُطْءٍ مِنْ فَضْلِكَ', 'بِبُطْءٍ مِنْ فَضْلِكَ', 'أَعِدْ مِنْ فَضْلِكَ'], atr: 'aʿid bi-buṭʾ min faḍlika' },
-        { p: ['الْقِطَارُ... فِي السَّاعَةِ... التَّاسِعَةِ.', 'al-qiṭār… fī s-sāʿa… at-tāsiʿa.', 'The train… at… nine.'], cue: 'Say thank you very much.', a: ['شُكْرًا جَزِيلًا', 'شُكْرًا'], atr: 'shukran jazīlan' },
+        { p: ['الباص بْيِطْلَع السّاعة تِسْعة ورُبْع مِن عِنْد الدَّوّار.', 'il-bāṣ byiṭlaʿ is-sāʿa tisʿa w rubʿ min ʿind id-dawwār.', 'The bus leaves at quarter past nine from the roundabout.'], cue: "Say sorry, you didn't understand.", a: ['آسِف، ما فْهِمْت', 'ما فْهِمْت', 'آسْفة، ما فْهِمْت', 'لَا أَفْهَمُ'], atr: 'āsif, mā fhimt' },
+        { p: ['آه، مَعْلِش!', 'āh, maʿlesh!', 'Oh, sorry!'], cue: 'Ask them to repeat slowly, please.', a: ['عيد شْوَيّ شْوَيّ لَو سَمَحْت', 'شْوَيّ شْوَيّ لَو سَمَحْت', 'عيد لَو سَمَحْت', 'أَعِدْ مِنْ فَضْلِكَ'], atr: 'ʿīd shwayy shwayy law samaḥt' },
+        { p: ['الباص... السّاعة... تِسْعة.', 'il-bāṣ… is-sāʿa… tisʿa.', 'The bus… at… nine.'], cue: 'Say thank you very much.', a: ['شُكْرًا كْتير', 'شُكْرًا', 'شُكْرًا جَزِيلًا'], atr: 'shukran ktīr' },
       ],
     },
   },
   {
     id: 'numbers',
-    title: 'الْأَرْقَام',
+    title: 'الأَرْقام',
     subtitle: 'Numbers, age & phone numbers',
     icon: '🔢',
     goal: 'I can count, read Arabic numerals, and say my age.',
     words: [
-      ['صِفْر', 'ṣifr', 'zero', '٠', 'English “cipher” and “zero” come from this word!'],
-      ['وَاحِد', 'wāḥid', 'one', '١'],
-      ['اِثْنَان', 'ithnān', 'two', '٢'],
-      ['ثَلَاثَة', 'thalātha', 'three', '٣'],
-      ['أَرْبَعَة', 'arbaʿa', 'four', '٤'],
-      ['خَمْسَة', 'khamsa', 'five', '٥'],
-      ['سِتَّة', 'sitta', 'six', '٦'],
-      ['سَبْعَة', 'sabʿa', 'seven', '٧'],
-      ['ثَمَانِيَة', 'thamāniya', 'eight', '٨'],
-      ['تِسْعَة', 'tisʿa', 'nine', '٩'],
-      ['عَشَرَة', 'ʿashara', 'ten', '١٠'],
-      ['عِشْرُون', 'ʿishrūn', 'twenty', '٢٠'],
-      ['ثَلَاثُون', 'thalāthūn', 'thirty', '٣٠'],
-      ['مِئَة', 'miʾa', 'one hundred', '١٠٠'],
+      ['صِفِر', 'ṣifir', 'zero', '٠', 'English “cipher” and “zero” come from this word!', { msa: ['صِفْر', 'ṣifr'], alt: ['صفر'] }],
+      ['واحَد', 'wāḥad', 'one', '١', null, { msa: ['وَاحِد', 'wāḥid'] }],
+      ['تْنين', 'tnēn', 'two', '٢', null, { msa: ['اِثْنَان', 'ithnān'], alt: ['اتنين'] }],
+      ['تْلاتة', 'tlēte', 'three', '٣', 'Spoken Arabic turns ث into ت: ثَلَاثَة → تْلاتة.', { msa: ['ثَلَاثَة', 'thalātha'] }],
+      ['أَرْبْعة', 'arbʿa', 'four', '٤', null, { msa: ['أَرْبَعَة', 'arbaʿa'], alt: ['اربعة'] }],
+      ['خَمْسة', 'khamse', 'five', '٥', null, { msa: ['خَمْسَة', 'khamsa'] }],
+      ['سِتّة', 'sitte', 'six', '٦', null, { msa: ['سِتَّة', 'sitta'] }],
+      ['سَبْعة', 'sabʿa', 'seven', '٧', null, { msa: ['سَبْعَة', 'sabʿa'] }],
+      ['تْمانْية', 'tmēnye', 'eight', '٨', null, { msa: ['ثَمَانِيَة', 'thamāniya'], alt: ['تمانية'] }],
+      ['تِسْعة', 'tisʿa', 'nine', '٩', null, { msa: ['تِسْعَة', 'tisʿa'] }],
+      ['عَشْرة', 'ʿashra', 'ten', '١٠', null, { msa: ['عَشَرَة', 'ʿashara'] }],
+      ['عِشْرين', 'ʿishrīn', 'twenty', '٢٠', null, { msa: ['عِشْرُون', 'ʿishrūn'] }],
+      ['تْلاتين', 'tlētīn', 'thirty', '٣٠', null, { msa: ['ثَلَاثُون', 'thalāthūn'] }],
+      ['مِيّة', 'miyye', 'one hundred', '١٠٠', null, { msa: ['مِئَة', 'miʾa'], alt: ['مية'] }],
     ],
     phrases: [
-      ['كَمْ عُمْرُكَ؟', 'kam ʿumruka?', 'How old are you? (to a man)', '🎂', 'Literally “how much is your age?” To a woman: كَمْ عُمْرُكِ؟'],
-      ['عُمْرِي ثَلَاثُونَ سَنَةً.', 'ʿumrī thalāthūna sana.', "I'm thirty years old.", '🎉'],
-      ['مَا رَقْمُ هَاتِفِكَ؟', 'mā raqmu hātifika?', "What's your phone number?", '📱'],
-      ['رَقْمِي...', 'raqmī…', 'My number is…', '☎️', null, ['رقمي']],
-      ['كَمْ؟', 'kam?', 'How many? / How much?', '🧮'],
+      ['قَدّيش عُمْرَك؟', 'ʾaddēsh ʿumrak?', 'How old are you? (to a man)', '🎂', 'قَدّيش (ʾaddēsh) = how much / how many. To a woman: عُمْرِك (ʿumrik).', { msa: ['كَمْ عُمْرُكَ؟', 'kam ʿumruka?'], alt: ['قديش عمرك'] }],
+      ['عُمْري تْلاتين سَنة.', 'ʿumri tlētīn sane.', "I'm thirty years old.", '🎉', null, { msa: ['عُمْرِي ثَلَاثُونَ سَنَةً', 'ʿumrī thalāthūna sana'], alt: ['عمري تلاتين'] }],
+      ['شو رَقْم تَلَفونَك؟', 'shu raʾm talafōnak?', "What's your phone number?", '📱', null, { msa: ['مَا رَقْمُ هَاتِفِكَ؟', 'mā raqmu hātifika?'], alt: ['شو رقمك'] }],
+      ['رَقْمي...', 'raʾmi…', 'My number is…', '☎️', null, { msa: ['رَقْمِي', 'raqmī'], alt: ['رقمي'] }],
+      ['قَدّيش؟', 'ʾaddēsh?', 'How much? / How many?', '🧮', null, { msa: ['كَمْ؟', 'kam?'] }],
     ],
     grammar: {
       title: 'Arabic numerals ٠١٢٣٤٥٦٧٨٩',
-      body: `<p>Much of the Arab world (especially the Middle East and Gulf) writes numbers with <b>Eastern Arabic numerals</b>:</p>
+      body: `<p>In the Levant, numbers are often written with <b>Eastern Arabic numerals</b>:</p>
 <table class="numerals"><tr><td>٠</td><td>١</td><td>٢</td><td>٣</td><td>٤</td><td>٥</td><td>٦</td><td>٧</td><td>٨</td><td>٩</td></tr>
 <tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr></table>
-<p>Surprise: although Arabic words run right-to-left, <b>numbers are written left-to-right</b>: ٢٠٢٦ = 2026.</p>
-<p><b>Tip:</b> ٥ (5) looks like a zero to Western eyes, and the real zero ٠ is just a dot!</p>
-<p>Age uses عُمْر (<i>ʿumr</i>, “age”) + possessive: عُمْرِي “my age”, عُمْرُكَ “your age”.</p>`,
+<p>Numbers are written <b>left-to-right</b> even inside right-to-left text: ٢٠٢٦ = 2026. Watch out: ٥ is 5, and zero ٠ is just a dot.</p>
+<p><b>Spoken vs standard:</b> spoken Arabic simplifies sounds — ث becomes ت (ثَلَاثَة → تْلاتة) and endings drop (عِشْرُون → عِشْرين).</p>
+<p>Age: عُمْري <i>ʿumri</i> “my age”, عُمْرَك <i>ʿumrak</i> “your age”.</p>`,
     },
     dialogue: {
       scene: 'Two classmates exchange numbers.',
       lines: [
-        ['Huda', 'مَا رَقْمُ هَاتِفِكَ؟', 'mā raqmu hātifika?', "What's your phone number?"],
-        ['Sami', 'رَقْمِي: صِفْر، خَمْسَة، ثَلَاثَة، سَبْعَة، تِسْعَة.', 'raqmī: ṣifr, khamsa, thalātha, sabʿa, tisʿa.', 'My number is: 0, 5, 3, 7, 9.'],
-        ['Huda', 'شُكْرًا! كَمْ عُمْرُكَ يَا سَامِي؟', 'shukran! kam ʿumruka yā Sāmī?', 'Thanks! How old are you, Sami?'],
-        ['Sami', 'عُمْرِي عِشْرُونَ سَنَةً. وَأَنْتِ؟', 'ʿumrī ʿishrūna sana. wa-anti?', "I'm twenty. And you?"],
-        ['Huda', 'عُمْرِي ثَلَاثُونَ سَنَةً.', 'ʿumrī thalāthūna sana.', "I'm thirty."],
+        ['Huda', 'شو رَقْم تَلَفونَك؟', 'shu raʾm talafōnak?', "What's your phone number?"],
+        ['Sami', 'رَقْمي: صِفِر، خَمْسة، تْلاتة، سَبْعة، تِسْعة.', 'raʾmi: ṣifir, khamse, tlēte, sabʿa, tisʿa.', 'My number is: 0, 5, 3, 7, 9.'],
+        ['Huda', 'شُكْرًا! قَدّيش عُمْرَك يا سامي؟', 'shukran! ʾaddēsh ʿumrak yā Sāmi?', 'Thanks! How old are you, Sami?'],
+        ['Sami', 'عُمْري عِشْرين سَنة. وإِنْتِ؟', 'ʿumri ʿishrīn sane. w inti?', "I'm twenty. And you?"],
+        ['Huda', 'عُمْري تْلاتين.', 'ʿumri tlētīn.', "I'm thirty."],
       ],
       questions: [
         { q: 'How old is Sami?', options: ['20', '30', '13'], a: 0 },
-        { q: 'Which digit comes first in Sami\'s number?', options: ['0', '5', '9'], a: 0 },
+        { q: "Which digit comes first in Sami's number?", options: ['0', '5', '9'], a: 0 },
       ],
     },
     roleplay: {
       scene: 'A new friend wants your number.',
       turns: [
-        { p: ['كَمْ عُمْرُكَ؟', 'kam ʿumruka?', 'How old are you?'], cue: "Say you're twenty years old.", a: ['عُمْرِي عِشْرُونَ سَنَةً', 'عِشْرُونَ سَنَةً', 'عُمْرِي عِشْرُون'], atr: 'ʿumrī ʿishrūna sana' },
-        { p: ['وَمَا رَقْمُ هَاتِفِكَ؟', 'wa-mā raqmu hātifika?', 'And what is your phone number?'], cue: 'Say: My number is five, three, one.', a: ['رَقْمِي خَمْسَة ثَلَاثَة وَاحِد', 'خَمْسَة ثَلَاثَة وَاحِد'], atr: 'raqmī khamsa, thalātha, wāḥid' },
-        { p: ['شُكْرًا!', 'shukran!', 'Thanks!'], cue: "Say “you're welcome”.", a: ['عَفْوًا'], atr: 'ʿafwan' },
+        { p: ['قَدّيش عُمْرَك؟', 'ʾaddēsh ʿumrak?', 'How old are you?'], cue: "Say you're twenty years old.", a: ['عُمْري عِشْرين سَنة', 'عُمْري عِشْرين', 'عِشْرين', 'عُمْرِي عِشْرُونَ سَنَةً'], atr: 'ʿumri ʿishrīn sane' },
+        { p: ['وشو رَقْم تَلَفونَك؟', 'w shu raʾm talafōnak?', 'And what is your phone number?'], cue: 'Say: My number is five, three, one.', a: ['رَقْمي خَمْسة تْلاتة واحَد', 'خَمْسة تْلاتة واحَد'], atr: 'raʾmi khamse, tlēte, wāḥad' },
+        { p: ['شُكْرًا!', 'shukran!', 'Thanks!'], cue: "Say “you're welcome”.", a: ['عَفْوًا', 'وَلَو'], atr: 'ʿafwan' },
       ],
     },
   },
   {
     id: 'family',
-    title: 'الْعَائِلَة',
+    title: 'العيلة',
     subtitle: 'Family & people',
     icon: '👨‍👩‍👧',
     goal: "I can talk about my family and ask about someone else's.",
     words: [
-      ['عَائِلَة', 'ʿāʾila', 'family', '👨‍👩‍👧'],
-      ['أُمّ', 'umm', 'mother', '👩'],
-      ['أَب', 'ab', 'father', '👨', '“My father” is أَبِي (abī).'],
-      ['أَخ', 'akh', 'brother', '👦', '“My brother” is أَخِي (akhī).'],
-      ['أُخْت', 'ukht', 'sister', '👧'],
-      ['اِبْن', 'ibn', 'son', '👶'],
-      ['بِنْت', 'bint', 'daughter / girl', '👧'],
-      ['زَوْج', 'zawj', 'husband', '🤵'],
-      ['زَوْجَة', 'zawja', 'wife', '👰'],
-      ['جَدّ', 'jadd', 'grandfather', '👴'],
-      ['جَدَّة', 'jadda', 'grandmother', '👵'],
-      ['صَدِيق', 'ṣadīq', 'friend (m)', '🧑‍🤝‍🧑', 'Female friend: صَدِيقَة (ṣadīqa).'],
-      ['طِفْل', 'ṭifl', 'child', '🧒'],
+      ['عيلة', 'ʿēle', 'family', '👨‍👩‍👧', null, { msa: ['عَائِلَة', 'ʿāʾila'] }],
+      ['إِمّ', 'imm', 'mother', '👩', 'Also ماما (māma).', { msa: ['أُمّ', 'umm'], alt: ['ماما'] }],
+      ['بَيّ', 'bayy', 'father', '👨', 'Also بابا (bāba). “My father” = بَيّي (bayyi).', { msa: ['أَب', 'ab'], alt: ['بابا'] }],
+      ['خَيّ', 'khayy', 'brother', '👦', '“My brother” = خَيّي (khayyi).', { msa: ['أَخ', 'akh'] }],
+      ['أُخْت', 'ukht', 'sister', '👧', null, { msa: ['أُخْت', 'ukht'] }],
+      ['اِبِن', 'ibin', 'son', '👶', null, { msa: ['اِبْن', 'ibn'], alt: ['ابن'] }],
+      ['بِنْت', 'binit', 'daughter / girl', '👧', null, { msa: ['بِنْت', 'bint'] }],
+      ['جوز', 'jōz', 'husband', '🤵', null, { msa: ['زَوْج', 'zawj'] }],
+      ['مَرا', 'mara', 'wife / woman', '👰', '“My wife” = مَرْتي (marti).', { msa: ['زَوْجَة', 'zawja'] }],
+      ['جِدّ', 'jidd', 'grandfather', '👴', 'Also جِدّو (jiddo), “grandpa”.', { msa: ['جَدّ', 'jadd'], alt: ['جدو'] }],
+      ['تيتا', 'tēta', 'grandmother', '👵', null, { msa: ['جَدَّة', 'jadda'] }],
+      ['صاحِب', 'ṣāḥeb', 'friend (m)', '🧑‍🤝‍🧑', 'Female friend: صاحْبة (ṣāḥbe).', { msa: ['صَدِيق', 'ṣadīq'] }],
+      ['وَلَد', 'walad', 'child / boy', '🧒', 'Plural: وْلاد (wlād), “kids”.', { msa: ['طِفْل', 'ṭifl'] }],
     ],
     phrases: [
-      ['هَذَا أَبِي.', 'hādhā abī.', 'This is my father.', '👨'],
-      ['هَذِهِ أُمِّي.', 'hādhihi ummī.', 'This is my mother.', '👩', 'هَذِهِ (hādhihi) is “this” for feminine nouns.'],
-      ['هَلْ عِنْدَكَ إِخْوَة؟', 'hal ʿindaka ikhwa?', 'Do you have siblings?', '👫'],
-      ['عِنْدِي أُخْتٌ وَاحِدَةٌ.', 'ʿindī ukhtun wāḥida.', 'I have one sister.', '👧'],
-      ['هَلْ أَنْتَ مُتَزَوِّجٌ؟', 'hal anta mutazawwij?', 'Are you married? (to a man)', '💍', 'To a woman: هَلْ أَنْتِ مُتَزَوِّجَةٌ؟'],
-      ['عِنْدِي وَلَدَانِ.', 'ʿindī waladān.', 'I have two children (boys).', '👦👦', 'The ending -ān means exactly two — Arabic has a special dual form!'],
+      ['هاد بَيّي.', 'hād bayyi.', 'This is my father.', '👨', null, { msa: ['هَذَا أَبِي', 'hādhā abī'] }],
+      ['هاي إِمّي.', 'hāy immi.', 'This is my mother.', '👩', 'هاي (hāy) is “this” for feminine nouns.', { msa: ['هَذِهِ أُمِّي', 'hādhihi ummī'] }],
+      ['عِنْدَك إِخْوة؟', 'ʿindak ikhwe?', 'Do you have siblings?', '👫', null, { msa: ['هَلْ عِنْدَكَ إِخْوَة؟', 'hal ʿindaka ikhwa?'] }],
+      ['عِنْدي أُخْت وِحْدة.', 'ʿindi ukht wiḥde.', 'I have one sister.', '👧', null, { msa: ['عِنْدِي أُخْتٌ وَاحِدَةٌ', 'ʿindī ukhtun wāḥida'], alt: ['عندي أخت'] }],
+      ['إِنْتَ مِتْجَوِّز؟', 'inte mitjawwiz?', 'Are you married? (to a man)', '💍', 'To a woman: إِنْتِ مِتْجَوّْزة؟ (inti mitjawwze?)', { msa: ['هَلْ أَنْتَ مُتَزَوِّجٌ؟', 'hal anta mutazawwij?'] }],
+      ['عِنْدي وَلَدين.', 'ʿindi waladēn.', 'I have two children.', '👦👦', 'The ending -ēn means exactly two — Arabic has a special “dual” form!', { msa: ['عِنْدِي وَلَدَانِ', 'ʿindī waladān'] }],
     ],
     grammar: {
-      title: 'My, your… and "to have" (عِنْدَ)',
+      title: 'My, your… and “to have” (عِنْد)',
       body: `<p>Possession is a <b>suffix</b> on the noun:</p>
-<table><tr><td>أُمّ<b>ِي</b></td><td>umm<b>ī</b></td><td>my mother</td></tr>
-<tr><td>أُمّ<b>ُكَ</b></td><td>umm<b>uka</b></td><td>your mother (m)</td></tr>
-<tr><td>أُمّ<b>ُكِ</b></td><td>umm<b>uki</b></td><td>your mother (f)</td></tr>
-<tr><td>أُمّ<b>ُهُ</b></td><td>umm<b>uhu</b></td><td>his mother</td></tr>
-<tr><td>أُمّ<b>ُهَا</b></td><td>umm<b>uhā</b></td><td>her mother</td></tr></table>
-<p><b>“To have”</b> isn't a verb in Arabic: you say “at me (is)…” — <b>عِنْدِي</b> (ʿindī) = I have, <b>عِنْدَكَ</b> (ʿindaka) = you have.</p>
-<p><b>This:</b> هَذَا (hādhā) for masculine, هَذِهِ (hādhihi) for feminine.</p>`,
+<table><tr><td>إِمّ<b>ي</b></td><td>imm<b>i</b></td><td>my mother</td></tr>
+<tr><td>إِمّ<b>َك</b></td><td>imm<b>ak</b></td><td>your mother (m)</td></tr>
+<tr><td>إِمّ<b>ِك</b></td><td>imm<b>ik</b></td><td>your mother (f)</td></tr>
+<tr><td>إِمّ<b>و</b></td><td>imm<b>o</b></td><td>his mother</td></tr>
+<tr><td>إِمّ<b>ا</b></td><td>imm<b>a</b></td><td>her mother</td></tr></table>
+<p><b>“To have”</b> isn't a verb: you say “at me (is)…” — <b>عِنْدي</b> <i>ʿindi</i> = I have, <b>عِنْدَك</b> <i>ʿindak</i> = you have, <b>ما عِنْدي</b> = I don't have.</p>
+<p><b>This:</b> هاد (hād) masculine, هاي (hāy) feminine. Standard: هَذَا / هَذِهِ.</p>`,
     },
     dialogue: {
       scene: 'Mona shows Tom a family photo.',
       lines: [
-        ['Mona', 'اُنْظُرْ، هَذِهِ عَائِلَتِي.', 'unẓur, hādhihi ʿāʾilatī.', 'Look, this is my family.'],
-        ['Tom', 'مَا شَاءَ اللَّهُ! مَنْ هَذَا؟', 'mā shāʾa llāh! man hādhā?', 'How wonderful! Who is this?'],
-        ['Mona', 'هَذَا أَبِي، وَهَذِهِ أُمِّي.', 'hādhā abī, wa-hādhihi ummī.', 'This is my father, and this is my mother.'],
-        ['Tom', 'هَلْ عِنْدَكِ إِخْوَة؟', 'hal ʿindaki ikhwa?', 'Do you have siblings?'],
-        ['Mona', 'نَعَمْ، عِنْدِي أُخْتٌ وَاحِدَةٌ، اِسْمُهَا سَلْمَى.', 'naʿam, ʿindī ukhtun wāḥida, ismuhā Salmā.', 'Yes, I have one sister, her name is Salma.'],
-        ['Tom', 'وَأَنَا عِنْدِي أَخَوَانِ.', 'wa-anā ʿindī akhawān.', 'And I have two brothers.'],
+        ['Mona', 'شوف، هاي عيلْتي.', 'shūf, hāy ʿēlti.', 'Look, this is my family.'],
+        ['Tom', 'ما شاء الله! مين هاد؟', 'mā shāʾ alla! mīn hād?', 'How wonderful! Who is this?'],
+        ['Mona', 'هاد بَيّي، وهاي إِمّي.', 'hād bayyi, w hāy immi.', 'This is my father, and this is my mother.'],
+        ['Tom', 'عِنْدِك إِخْوة؟', 'ʿindik ikhwe?', 'Do you have siblings?'],
+        ['Mona', 'إي، عِنْدي أُخْت وِحْدة، اِسْما سَلْمى.', 'ē, ʿindi ukht wiḥde, isma Salma.', 'Yes, I have one sister, her name is Salma.'],
+        ['Tom', 'وأَنا عِنْدي خَيّين.', 'w ana ʿindi khayyēn.', 'And I have two brothers.'],
       ],
       questions: [
         { q: "What is Mona's sister's name?", options: ['Salma', 'Layla', 'Huda'], a: 0 },
@@ -256,61 +263,62 @@ export default [
     roleplay: {
       scene: 'A neighbour asks about your family.',
       turns: [
-        { p: ['هَلْ عِنْدَكَ إِخْوَة؟', 'hal ʿindaka ikhwa?', 'Do you have siblings?'], cue: 'Say: yes, I have one sister.', a: ['نَعَمْ، عِنْدِي أُخْتٌ وَاحِدَةٌ', 'عِنْدِي أُخْتٌ وَاحِدَةٌ', 'نَعَمْ، عِنْدِي أُخْت'], atr: 'naʿam, ʿindī ukhtun wāḥida' },
-        { p: ['هَلْ أَنْتَ مُتَزَوِّجٌ؟', 'hal anta mutazawwij?', 'Are you married?'], cue: 'Say: no.', a: ['لَا', 'لَا، أَنَا لَسْتُ مُتَزَوِّجًا'], atr: 'lā' },
-        { p: ['وَمَا اسْمُ أُمِّكَ؟', 'wa-mā smu ummika?', "And what is your mother's name?"], cue: 'Say: My mother\'s name is Maryam.', a: ['اِسْمُ أُمِّي مَرْيَم', 'أُمِّي اِسْمُهَا مَرْيَم', 'مَرْيَم'], atr: 'ismu ummī Maryam' },
+        { p: ['عِنْدَك إِخْوة؟', 'ʿindak ikhwe?', 'Do you have siblings?'], cue: 'Say: yes, I have one sister.', a: ['إي، عِنْدي أُخْت وِحْدة', 'عِنْدي أُخْت وِحْدة', 'إي، عِنْدي أُخْت', 'عِنْدِي أُخْتٌ وَاحِدَةٌ'], atr: 'ē, ʿindi ukht wiḥde' },
+        { p: ['إِنْتَ مِتْجَوِّز؟', 'inte mitjawwiz?', 'Are you married?'], cue: 'Say: no.', a: ['لَأ', 'لَأ، مِش مِتْجَوِّز', 'لا'], atr: 'laʾ' },
+        { p: ['وشو اسِم إِمَّك؟', 'w shu ism immak?', "And what's your mother's name?"], cue: "Say: My mother's name is Maryam.", a: ['إِمّي اسْما مَرْيَم', 'اِسِم إِمّي مَرْيَم', 'مَرْيَم', 'اِسْمُ أُمِّي مَرْيَم'], atr: 'immi isma Maryam' },
       ],
     },
   },
   {
     id: 'cafe',
-    title: 'فِي الْمَقْهَى',
+    title: 'بالقَهْوة',
     subtitle: 'Food, drink & ordering',
     icon: '☕',
     goal: 'I can order food and drinks, and ask for the bill.',
     words: [
-      ['قَهْوَة', 'qahwa', 'coffee', '☕', 'English “coffee” comes from this word (via Turkish).'],
-      ['شَاي', 'shāy', 'tea', '🍵'],
-      ['مَاء', 'māʾ', 'water', '💧'],
-      ['حَلِيب', 'ḥalīb', 'milk', '🥛'],
-      ['عَصِير', 'ʿaṣīr', 'juice', '🧃'],
-      ['خُبْز', 'khubz', 'bread', '🫓'],
-      ['سُكَّر', 'sukkar', 'sugar', '🍬', 'Source of the English word “sugar”.'],
-      ['لَحْم', 'laḥm', 'meat', '🥩'],
-      ['دَجَاج', 'dajāj', 'chicken', '🍗'],
-      ['أَرُزّ', 'aruzz', 'rice', '🍚'],
-      ['فَاكِهَة', 'fākiha', 'fruit', '🍎'],
-      ['لَذِيذ', 'ladhīdh', 'delicious', '😋'],
-      ['الْحِسَاب', 'al-ḥisāb', 'the bill', '🧾'],
+      ['قَهْوة', 'ʾahwe', 'coffee / café', '☕', 'Spoken ق is a glottal stop: “ʾahwe”, not “qahwa”. Also means “café”.', { msa: ['قَهْوَة', 'qahwa'] }],
+      ['شاي', 'shāy', 'tea', '🍵', null, { msa: ['شَاي', 'shāy'] }],
+      ['مَيّ', 'mayy', 'water', '💧', null, { msa: ['مَاء', 'māʾ'], alt: ['مي'] }],
+      ['حَليب', 'ḥalīb', 'milk', '🥛', null, { msa: ['حَلِيب', 'ḥalīb'] }],
+      ['عَصير', 'ʿaṣīr', 'juice', '🧃', null, { msa: ['عَصِير', 'ʿaṣīr'] }],
+      ['خِبِز', 'khibiz', 'bread', '🫓', null, { msa: ['خُبْز', 'khubz'], alt: ['خبز'] }],
+      ['سُكَّر', 'sukkar', 'sugar', '🍬', 'Source of the English word “sugar”.', { msa: ['سُكَّر', 'sukkar'] }],
+      ['لَحْمة', 'laḥme', 'meat', '🥩', null, { msa: ['لَحْم', 'laḥm'] }],
+      ['جاج', 'jāj', 'chicken', '🍗', null, { msa: ['دَجَاج', 'dajāj'] }],
+      ['رِزّ', 'rizz', 'rice', '🍚', null, { msa: ['أَرُزّ', 'aruzz'], alt: ['رز'] }],
+      ['فَواكِه', 'fawākeh', 'fruit', '🍎', null, { msa: ['فَاكِهَة', 'fākiha'] }],
+      ['طَيِّب', 'ṭayyeb', 'tasty / delicious', '😋', 'Same word as “okay” — context tells you which. Also زاكي (zāki).', { msa: ['لَذِيذ', 'ladhīdh'], alt: ['زاكي'] }],
+      ['الحْساب', 'il-ḥsāb', 'the bill', '🧾', null, { msa: ['الْحِسَاب', 'al-ḥisāb'], alt: ['الحساب'] }],
     ],
     phrases: [
-      ['أُرِيدُ قَهْوَةً مِنْ فَضْلِكَ.', 'urīdu qahwatan min faḍlika.', "I'd like a coffee, please.", '☕', null, ['اريد قهوة']],
-      ['بِدُونِ سُكَّرٍ.', 'bi-dūni sukkar.', 'Without sugar.', '🚫🍬'],
-      ['أَنَا جَائِعٌ.', 'anā jāʾiʿ.', "I'm hungry. (man)", '🍽️', 'A woman says: أَنَا جَائِعَةٌ (jāʾiʿa).', ['انا جائعة']],
-      ['أَنَا عَطْشَانُ.', 'anā ʿaṭshān.', "I'm thirsty. (man)", '🥤', 'A woman says: أَنَا عَطْشَى (ʿaṭshā).'],
-      ['الْحِسَابُ مِنْ فَضْلِكَ.', 'al-ḥisābu min faḍlika.', 'The bill, please.', '🧾'],
-      ['الطَّعَامُ لَذِيذٌ!', 'aṭ-ṭaʿāmu ladhīdh!', 'The food is delicious!', '😋'],
-      ['تَفَضَّلْ.', 'tafaḍḍal.', 'Here you are / Please (go ahead).', '🤲', 'Said when offering something. To a woman: تَفَضَّلِي (tafaḍḍalī).'],
+      ['بَدّي قَهْوة لَو سَمَحْت.', 'biddi ʾahwe law samaḥt.', "I'd like a coffee, please.", '☕', 'بَدّي (biddi) = I want — the key word for ordering anything.', { msa: ['أُرِيدُ قَهْوَةً مِنْ فَضْلِكَ', 'urīdu qahwatan min faḍlika'], alt: ['بدي قهوة'] }],
+      ['بَلا سُكَّر.', 'bala sukkar.', 'Without sugar.', '🚫🍬', null, { msa: ['بِدُونِ سُكَّرٍ', 'bi-dūni sukkar'] }],
+      ['أَنا جوعان.', 'ana jūʿān.', "I'm hungry. (man)", '🍽️', 'A woman says جوعانة (jūʿāne).', { msa: ['أَنَا جَائِعٌ', 'anā jāʾiʿ'], alt: ['أنا جوعانة'] }],
+      ['أَنا عَطْشان.', 'ana ʿaṭshān.', "I'm thirsty. (man)", '🥤', 'A woman says عَطْشانة (ʿaṭshāne).', { msa: ['أَنَا عَطْشَانُ', 'anā ʿaṭshān'], alt: ['أنا عطشانة'] }],
+      ['الحْساب لَو سَمَحْت.', 'il-ḥsāb law samaḥt.', 'The bill, please.', '🧾', null, { msa: ['الْحِسَابُ مِنْ فَضْلِكَ', 'al-ḥisābu min faḍlika'] }],
+      ['الأَكِل كْتير طَيِّب!', 'il-akil ktīr ṭayyeb!', 'The food is really delicious!', '😋', null, { msa: ['الطَّعَامُ لَذِيذٌ جِدًّا', 'aṭ-ṭaʿāmu ladhīdhun jiddan'] }],
+      ['تْفَضَّل.', 'tfaḍḍal.', 'Here you are / Please, go ahead.', '🤲', 'Said when offering something. To a woman: تْفَضَّلي (tfaḍḍali).', { msa: ['تَفَضَّلْ', 'tafaḍḍal'] }],
+      ['صَحْتين!', 'ṣaḥtēn!', 'Enjoy your meal! (lit. “two healths”)', '🍴', 'Reply: عَلى قَلْبَك (ʿala ʾalbak), “on your heart”.', { msa: ['بِالْهَنَاءِ وَالشِّفَاءِ', 'bil-hanāʾ wa-sh-shifāʾ'] }],
     ],
     grammar: {
-      title: 'The word "the" (الـ) and the sun letters',
-      body: `<p>“The” is the prefix <b>الـ</b> (<i>al-</i>), joined to the word: قَهْوَة → <b>الْ</b>قَهْوَة (<i>al-qahwa</i>).</p>
-<p>Before 14 “<b>sun letters</b>” (ت ث د ذ ر ز س ش ص ض ط ظ ل ن), the <i>l</i> is not pronounced — it assimilates, and the sun letter is doubled (shadda):</p>
-<table><tr><td>الشَّاي</td><td><i>a<b>sh-sh</b>āy</i></td><td>the tea (sun)</td></tr>
-<tr><td>الطَّعَام</td><td><i>a<b>ṭ-ṭ</b>aʿām</i></td><td>the food (sun)</td></tr>
-<tr><td>الْقَهْوَة</td><td><i>a<b>l-q</b>ahwa</i></td><td>the coffee (moon)</td></tr>
-<tr><td>الْخُبْز</td><td><i>a<b>l-kh</b>ubz</i></td><td>the bread (moon)</td></tr></table>
-<p><b>أُرِيدُ</b> (urīdu, “I want”) + noun is the normal, polite way to order — just add مِنْ فَضْلِكَ.</p>`,
+      title: 'بَدّي “I want” — and the word for “the”',
+      body: `<p><b>بَدّ-</b> + suffix = “want”. It's the most useful word for ordering:</p>
+<table><tr><td>بَدّي</td><td><i>biddi</i></td><td>I want</td></tr>
+<tr><td>بَدَّك</td><td><i>biddak</i></td><td>you want (m)</td></tr>
+<tr><td>شو بَدَّك؟</td><td><i>shu biddak?</i></td><td>What do you want?</td></tr>
+<tr><td>ما بَدّي</td><td><i>mā biddi</i></td><td>I don't want</td></tr></table>
+<p>Standard Arabic uses أُرِيدُ (urīdu) instead.</p>
+<p><b>“The”</b> is ال (il- / al-). Before “sun letters” (ت ث د ذ ر ز س ش ص ض ط ظ ل ن) the l disappears and the letter doubles: الشّاي <i>ish-shāy</i>, but الحَليب <i>il-ḥalīb</i>.</p>`,
     },
     dialogue: {
       scene: 'Ordering at a café in Beirut.',
       lines: [
-        ['Waiter', 'أَهْلًا وَسَهْلًا! مَاذَا تُرِيدُ؟', 'ahlan wa-sahlan! mādhā turīd?', 'Welcome! What would you like?'],
-        ['Customer', 'أُرِيدُ شَايًا مِنْ فَضْلِكَ.', 'urīdu shāyan min faḍlika.', "I'd like a tea, please."],
-        ['Waiter', 'بِالسُّكَّرِ؟', 'bis-sukkar?', 'With sugar?'],
-        ['Customer', 'لَا، بِدُونِ سُكَّرٍ. وَخُبْزًا أَيْضًا.', 'lā, bi-dūni sukkar. wa-khubzan ayḍan.', 'No, without sugar. And bread too.'],
-        ['Waiter', 'تَفَضَّلْ.', 'tafaḍḍal.', 'Here you are.'],
-        ['Customer', 'شُكْرًا! الْحِسَابُ مِنْ فَضْلِكَ.', 'shukran! al-ḥisābu min faḍlika.', 'Thanks! The bill, please.'],
+        ['Waiter', 'أَهْلا وسَهْلا! شو بَدَّك؟', 'ahla w sahla! shu biddak?', 'Welcome! What would you like?'],
+        ['Customer', 'بَدّي شاي لَو سَمَحْت.', 'biddi shāy law samaḥt.', "I'd like a tea, please."],
+        ['Waiter', 'مَعْ سُكَّر؟', 'maʿ sukkar?', 'With sugar?'],
+        ['Customer', 'لَأ، بَلا سُكَّر. وخِبِز كَمان.', 'laʾ, bala sukkar. w khibiz kamān.', 'No, without sugar. And bread too.'],
+        ['Waiter', 'تْفَضَّل. صَحْتين!', 'tfaḍḍal. ṣaḥtēn!', 'Here you are. Enjoy!'],
+        ['Customer', 'شُكْرًا! الحْساب لَو سَمَحْت.', 'shukran! il-ḥsāb law samaḥt.', 'Thanks! The bill, please.'],
       ],
       questions: [
         { q: 'What does the customer drink?', options: ['Tea without sugar', 'Coffee with sugar', 'Juice'], a: 0 },
@@ -320,60 +328,60 @@ export default [
     roleplay: {
       scene: 'A waiter greets you in a café.',
       turns: [
-        { p: ['أَهْلًا! مَاذَا تُرِيدُ؟', 'ahlan! mādhā turīd?', 'Hi! What would you like?'], cue: "Say you'd like a coffee, please.", a: ['أُرِيدُ قَهْوَةً مِنْ فَضْلِكَ', 'قَهْوَة مِنْ فَضْلِكَ', 'أُرِيدُ قَهْوَةً'], atr: 'urīdu qahwatan min faḍlika' },
-        { p: ['بِالسُّكَّرِ؟', 'bis-sukkar?', 'With sugar?'], cue: 'Say: without sugar.', a: ['بِدُونِ سُكَّرٍ', 'لَا، بِدُونِ سُكَّرٍ'], atr: 'bi-dūni sukkar' },
-        { p: ['تَفَضَّلْ!', 'tafaḍḍal!', 'Here you are!'], cue: 'Say thanks, and ask for the bill.', a: ['شُكْرًا، الْحِسَابُ مِنْ فَضْلِكَ', 'الْحِسَابُ مِنْ فَضْلِكَ'], atr: 'shukran, al-ḥisābu min faḍlika' },
+        { p: ['أَهْلا! شو بَدَّك؟', 'ahla! shu biddak?', 'Hi! What would you like?'], cue: "Say you'd like a coffee, please.", a: ['بَدّي قَهْوة لَو سَمَحْت', 'قَهْوة لَو سَمَحْت', 'بَدّي قَهْوة', 'أُرِيدُ قَهْوَةً مِنْ فَضْلِكَ'], atr: 'biddi ʾahwe law samaḥt' },
+        { p: ['مَعْ سُكَّر؟', 'maʿ sukkar?', 'With sugar?'], cue: 'Say: without sugar.', a: ['بَلا سُكَّر', 'لَأ، بَلا سُكَّر', 'بِدُونِ سُكَّرٍ'], atr: 'bala sukkar' },
+        { p: ['تْفَضَّل!', 'tfaḍḍal!', 'Here you are!'], cue: 'Say thanks, and ask for the bill.', a: ['شُكْرًا، الحْساب لَو سَمَحْت', 'الحْساب لَو سَمَحْت', 'الْحِسَابُ مِنْ فَضْلِكَ'], atr: 'shukran, il-ḥsāb law samaḥt' },
       ],
     },
   },
   {
     id: 'town',
-    title: 'فِي الْمَدِينَةِ',
+    title: 'بالمَدينة',
     subtitle: 'Places & directions',
     icon: '🗺️',
     goal: 'I can ask where places are and understand simple directions.',
     words: [
-      ['مَدِينَة', 'madīna', 'city', '🏙️'],
-      ['شَارِع', 'shāriʿ', 'street', '🛣️'],
-      ['مَحَطَّة', 'maḥaṭṭa', 'station', '🚉'],
-      ['فُنْدُق', 'funduq', 'hotel', '🏨'],
-      ['مَطْعَم', 'maṭʿam', 'restaurant', '🍽️', 'From the root ط-ع-م (food) — “place of eating”.'],
-      ['صَيْدَلِيَّة', 'ṣaydaliyya', 'pharmacy', '💊'],
-      ['مَسْجِد', 'masjid', 'mosque', '🕌', 'English “mosque” comes from this word.'],
-      ['سُوق', 'sūq', 'market', '🧺'],
-      ['حَمَّام', 'ḥammām', 'bathroom', '🚻'],
-      ['يَمِين', 'yamīn', 'right', '➡️'],
-      ['يَسَار', 'yasār', 'left', '⬅️'],
-      ['قَرِيب', 'qarīb', 'near', '📍'],
-      ['بَعِيد', 'baʿīd', 'far', '🔭'],
+      ['مَدينة', 'madīne', 'city', '🏙️', null, { msa: ['مَدِينَة', 'madīna'] }],
+      ['شارِع', 'shāreʿ', 'street', '🛣️', null, { msa: ['شَارِع', 'shāriʿ'] }],
+      ['مَحَطّة', 'maḥaṭṭa', 'station', '🚉', null, { msa: ['مَحَطَّة', 'maḥaṭṭa'] }],
+      ['أوتيل', 'ōtēl', 'hotel', '🏨', 'From French “hôtel”. Standard Arabic: فُنْدُق.', { msa: ['فُنْدُق', 'funduq'], alt: ['فندق'] }],
+      ['مَطْعَم', 'maṭʿam', 'restaurant', '🍽️', 'Root ط-ع-م (food): “place of eating”.', { msa: ['مَطْعَم', 'maṭʿam'] }],
+      ['صَيْدَلِيّة', 'ṣaydaliyye', 'pharmacy', '💊', null, { msa: ['صَيْدَلِيَّة', 'ṣaydaliyya'] }],
+      ['جامِع', 'jāmeʿ', 'mosque', '🕌', 'Also مَسْجِد (masjid), source of English “mosque”.', { msa: ['مَسْجِد', 'masjid'], alt: ['مسجد'] }],
+      ['سوق', 'sūʾ', 'market', '🧺', null, { msa: ['سُوق', 'sūq'] }],
+      ['حَمّام', 'ḥammām', 'bathroom', '🚻', null, { msa: ['حَمَّام', 'ḥammām'] }],
+      ['يَمين', 'yamīn', 'right', '➡️', null, { msa: ['يَمِين', 'yamīn'] }],
+      ['شْمال', 'shmāl', 'left', '⬅️', 'Standard Arabic says يَسَار (yasār); شَمال there means “north”.', { msa: ['يَسَار', 'yasār'] }],
+      ['قَريب', 'ʾarīb', 'near', '📍', null, { msa: ['قَرِيب', 'qarīb'] }],
+      ['بْعيد', 'bʿīd', 'far', '🔭', null, { msa: ['بَعِيد', 'baʿīd'], alt: ['بعيد'] }],
     ],
     phrases: [
-      ['أَيْنَ الْمَحَطَّةُ؟', 'ayna l-maḥaṭṭa?', 'Where is the station?', '🚉'],
-      ['أَيْنَ الْحَمَّامُ؟', 'ayna l-ḥammām?', 'Where is the bathroom?', '🚻'],
-      ['عَلَى الْيَمِينِ.', 'ʿalā l-yamīn.', 'On the right.', '➡️'],
-      ['عَلَى الْيَسَارِ.', 'ʿalā l-yasār.', 'On the left.', '⬅️'],
-      ['اِذْهَبْ مُبَاشَرَةً.', 'idhhab mubāsharatan.', 'Go straight ahead.', '⬆️'],
-      ['هَلْ هُوَ بَعِيدٌ؟', 'hal huwa baʿīd?', 'Is it far?', '🔭'],
-      ['هُنَاكَ صَيْدَلِيَّةٌ قَرِيبَةٌ.', 'hunāka ṣaydaliyyatun qarība.', "There's a pharmacy nearby.", '💊'],
+      ['وَين المَحَطّة؟', 'wēn il-maḥaṭṭa?', 'Where is the station?', '🚉', 'وَين (wēn) = where. Standard: أَيْنَ.', { msa: ['أَيْنَ الْمَحَطَّةُ؟', 'ayna l-maḥaṭṭa?'] }],
+      ['وَين الحَمّام؟', 'wēn il-ḥammām?', 'Where is the bathroom?', '🚻', null, { msa: ['أَيْنَ الْحَمَّامُ؟', 'ayna l-ḥammām?'] }],
+      ['عاليَمين.', 'ʿal-yamīn.', 'On the right.', '➡️', null, { msa: ['عَلَى الْيَمِينِ', 'ʿalā l-yamīn'], alt: ['عَلى اليمين'] }],
+      ['عالشْمال.', 'ʿash-shmāl.', 'On the left.', '⬅️', null, { msa: ['عَلَى الْيَسَارِ', 'ʿalā l-yasār'], alt: ['عَلى الشمال'] }],
+      ['دُغْري.', 'dughri.', 'Straight ahead.', '⬆️', 'From Turkish “doğru”. Very common for directions.', { msa: ['مُبَاشَرَةً', 'mubāsharatan'], alt: ['على طول'] }],
+      ['بْعيد؟', 'bʿīd?', 'Is it far?', '🔭', 'A question is just rising intonation.', { msa: ['هَلْ هُوَ بَعِيدٌ؟', 'hal huwa baʿīd?'] }],
+      ['في صَيْدَلِيّة قَريبة؟', 'fī ṣaydaliyye ʾarībe?', 'Is there a pharmacy nearby?', '💊', 'في (fī) = there is / is there?', { msa: ['هَلْ هُنَاكَ صَيْدَلِيَّةٌ قَرِيبَةٌ؟', 'hal hunāka ṣaydaliyyatun qarība?'] }],
     ],
     grammar: {
-      title: 'Masculine and feminine: the ة ending',
-      body: `<p>Most feminine nouns end in <b>ة</b> (<i>tāʾ marbūṭa</i>, pronounced “-a”): مَحَطَّة، صَيْدَلِيَّة، مَدِينَة.</p>
-<p>Adjectives come <b>after</b> the noun and <b>agree</b> — add ة for feminine:</p>
-<table><tr><td>فُنْدُقٌ قَرِيبٌ</td><td><i>funduqun qarīb</i></td><td>a nearby hotel</td></tr>
-<tr><td>صَيْدَلِيَّةٌ قَرِيبَ<b>ة</b>ٌ</td><td><i>ṣaydaliyyatun qarība</i></td><td>a nearby pharmacy</td></tr></table>
-<p><b>أَيْنَ</b> (ayna) = where. <b>هُنَاكَ</b> (hunāka) = there is / there.</p>
-<p><b>Roots:</b> مَطْعَم (restaurant) shares its root ط-ع-م with طَعَام (food). Learning roots multiplies your vocabulary!</p>`,
+      title: 'وَين؟ في…? — and feminine ة',
+      body: `<p><b>وَين</b> (wēn) = where? &nbsp; <b>في</b> (fī) = there is / is there? &nbsp; <b>ما في</b> (mā fī) = there isn't.</p>
+<p>Most feminine nouns end in <b>ة</b>, pronounced “-e” or “-a” in speech: مَحَطّة <i>maḥaṭṭa</i>, صَيْدَلِيّة <i>ṣaydaliyye</i>.</p>
+<p>Adjectives come <b>after</b> the noun and agree — add ة for feminine:</p>
+<table><tr><td>أوتيل قَريب</td><td><i>ōtēl ʾarīb</i></td><td>a nearby hotel</td></tr>
+<tr><td>صَيْدَلِيّة قَريب<b>ة</b></td><td><i>ṣaydaliyye ʾarībe</i></td><td>a nearby pharmacy</td></tr></table>
+<p><b>Spoken shortcuts:</b> عَلى ال… becomes عال… : عاليَمين <i>ʿal-yamīn</i> “on the right”.</p>`,
     },
     dialogue: {
-      scene: 'A tourist in Cairo looks for the station.',
+      scene: 'A tourist in Amman looks for the station.',
       lines: [
-        ['Tourist', 'عَفْوًا، أَيْنَ الْمَحَطَّةُ؟', 'ʿafwan, ayna l-maḥaṭṭa?', 'Excuse me, where is the station?'],
-        ['Local', 'اِذْهَبْ مُبَاشَرَةً، ثُمَّ عَلَى الْيَسَارِ.', 'idhhab mubāsharatan, thumma ʿalā l-yasār.', 'Go straight ahead, then on the left.'],
-        ['Tourist', 'هَلْ هِيَ بَعِيدَةٌ؟', 'hal hiya baʿīda?', 'Is it far?'],
-        ['Local', 'لَا، قَرِيبَةٌ جِدًّا. خَمْسُ دَقَائِقَ.', 'lā, qarībatun jiddan. khamsu daqāʾiq.', 'No, very near. Five minutes.'],
-        ['Tourist', 'وَهَلْ هُنَاكَ صَيْدَلِيَّةٌ قَرِيبَةٌ؟', 'wa-hal hunāka ṣaydaliyyatun qarība?', 'And is there a pharmacy nearby?'],
-        ['Local', 'نَعَمْ، عَلَى الْيَمِينِ، بِجَانِبِ الْمَسْجِدِ.', 'naʿam, ʿalā l-yamīn, bi-jānibi l-masjid.', 'Yes, on the right, next to the mosque.'],
+        ['Tourist', 'عَفْوًا، وَين المَحَطّة؟', 'ʿafwan, wēn il-maḥaṭṭa?', 'Excuse me, where is the station?'],
+        ['Local', 'روح دُغْري، وبَعْدين عالشْمال.', 'rūḥ dughri, w baʿdēn ʿash-shmāl.', 'Go straight, then on the left.'],
+        ['Tourist', 'بْعيدة؟', 'bʿīde?', 'Is it far?'],
+        ['Local', 'لَأ، قَريبة كْتير. خَمِس دَقايِق.', 'laʾ, ʾarībe ktīr. khamis daʾāyeʾ.', 'No, very near. Five minutes.'],
+        ['Tourist', 'وفي صَيْدَلِيّة قَريبة؟', 'w fī ṣaydaliyye ʾarībe?', 'And is there a pharmacy nearby?'],
+        ['Local', 'إي، عاليَمين، جَنْب الجامِع.', 'ē, ʿal-yamīn, janb ij-jāmeʿ.', 'Yes, on the right, next to the mosque.'],
       ],
       questions: [
         { q: 'How far is the station?', options: ['Five minutes', 'Fifteen minutes', 'Very far'], a: 0 },
@@ -383,250 +391,249 @@ export default [
     roleplay: {
       scene: "You're looking for your hotel.",
       turns: [
-        { p: ['نَعَمْ؟ تَفَضَّلْ.', 'naʿam? tafaḍḍal.', 'Yes? Go ahead.'], cue: 'Ask where the hotel is.', a: ['أَيْنَ الْفُنْدُقُ؟', 'عَفْوًا، أَيْنَ الْفُنْدُقُ؟'], atr: 'ayna l-funduq?' },
-        { p: ['اِذْهَبْ مُبَاشَرَةً، ثُمَّ عَلَى الْيَمِينِ.', 'idhhab mubāsharatan, thumma ʿalā l-yamīn.', 'Go straight ahead, then on the right.'], cue: 'Ask: is it far?', a: ['هَلْ هُوَ بَعِيدٌ؟'], atr: 'hal huwa baʿīd?' },
-        { p: ['لَا، قَرِيبٌ جِدًّا.', 'lā, qarībun jiddan.', 'No, very near.'], cue: 'Say thank you very much.', a: ['شُكْرًا جَزِيلًا', 'شُكْرًا'], atr: 'shukran jazīlan' },
+        { p: ['إي؟ تْفَضَّل.', 'ē? tfaḍḍal.', 'Yes? Go ahead.'], cue: 'Ask where the hotel is.', a: ['وَين الأوتيل؟', 'عَفْوًا، وَين الأوتيل؟', 'أَيْنَ الْفُنْدُقُ؟'], atr: 'wēn il-ōtēl?' },
+        { p: ['روح دُغْري، وبَعْدين عاليَمين.', 'rūḥ dughri, w baʿdēn ʿal-yamīn.', 'Go straight, then on the right.'], cue: 'Ask: is it far?', a: ['بْعيد؟', 'هَلْ هُوَ بَعِيدٌ؟'], atr: 'bʿīd?' },
+        { p: ['لَأ، قَريب كْتير.', 'laʾ, ʾarīb ktīr.', 'No, very near.'], cue: 'Say thank you very much.', a: ['شُكْرًا كْتير', 'شُكْرًا', 'يِسْلَمو'], atr: 'shukran ktīr' },
       ],
     },
   },
   {
     id: 'time',
-    title: 'كَمِ السَّاعَةُ؟',
+    title: 'قَدّيش السّاعة؟',
     subtitle: 'Time & days',
     icon: '🕒',
     goal: 'I can tell the time, name the days and make a simple plan.',
     words: [
-      ['الْيَوْم', 'al-yawm', 'today (lit. the day)', '📅'],
-      ['غَدًا', 'ghadan', 'tomorrow', '➡️'],
-      ['أَمْس', 'ams', 'yesterday', '⬅️'],
-      ['الْأَحَد', 'al-aḥad', 'Sunday', '1️⃣', 'From أَحَد “one” — the first day.'],
-      ['الِاثْنَيْن', 'al-ithnayn', 'Monday', '2️⃣', 'From “two”.'],
-      ['الثُّلَاثَاء', 'ath-thulāthāʾ', 'Tuesday', '3️⃣', 'From “three”.'],
-      ['الْأَرْبِعَاء', 'al-arbiʿāʾ', 'Wednesday', '4️⃣', 'From “four”.'],
-      ['الْخَمِيس', 'al-khamīs', 'Thursday', '5️⃣', 'From “five”.'],
-      ['الْجُمُعَة', 'al-jumuʿa', 'Friday', '🕌', 'The day of “gathering” for congregational prayer.'],
-      ['السَّبْت', 'as-sabt', 'Saturday', '6️⃣'],
-      ['صَبَاح', 'ṣabāḥ', 'morning', '🌄'],
-      ['مَسَاء', 'masāʾ', 'evening', '🌇'],
-      ['الْآن', 'al-ān', 'now', '⏰'],
+      ['اليَوم', 'il-yōm', 'today', '📅', null, { msa: ['الْيَوْم', 'al-yawm'] }],
+      ['بُكْرا', 'bukra', 'tomorrow', '➡️', null, { msa: ['غَدًا', 'ghadan'], alt: ['بكره'] }],
+      ['مْبارِح', 'mbēreḥ', 'yesterday', '⬅️', null, { msa: ['أَمْس', 'ams'] }],
+      ['الأَحَد', 'il-aḥad', 'Sunday', '1️⃣', 'From أَحَد “one” — the first day of the week.', { msa: ['الْأَحَد', 'al-aḥad'] }],
+      ['التَّنين', 'it-tanēn', 'Monday', '2️⃣', 'From “two”.', { msa: ['الِاثْنَيْن', 'al-ithnayn'] }],
+      ['التَّلاتا', 'it-talāta', 'Tuesday', '3️⃣', 'From “three”.', { msa: ['الثُّلَاثَاء', 'ath-thulāthāʾ'] }],
+      ['الأَرْبْعا', 'il-arbʿa', 'Wednesday', '4️⃣', 'From “four”.', { msa: ['الْأَرْبِعَاء', 'al-arbiʿāʾ'] }],
+      ['الخَميس', 'il-khamīs', 'Thursday', '5️⃣', 'From “five”.', { msa: ['الْخَمِيس', 'al-khamīs'] }],
+      ['الجُمْعة', 'ij-jumʿa', 'Friday', '🕌', 'The day of “gathering” for congregational prayer.', { msa: ['الْجُمُعَة', 'al-jumuʿa'] }],
+      ['السَّبْت', 'is-sabt', 'Saturday', '6️⃣', null, { msa: ['السَّبْت', 'as-sabt'] }],
+      ['الصُّبِح', 'iṣ-ṣubiḥ', 'the morning', '🌄', null, { msa: ['الصَّبَاح', 'aṣ-ṣabāḥ'], alt: ['الصبح'] }],
+      ['المَسا', 'il-masa', 'the evening', '🌇', null, { msa: ['الْمَسَاء', 'al-masāʾ'] }],
+      ['هَلَّق', 'hallaʾ', 'now', '⏰', 'Also written هلأ. In Jordan/Palestine: هَلْقَيْت or هَسّا (hassa).', { msa: ['الْآن', 'al-ān'], alt: ['هلأ', 'هسا'] }],
     ],
     phrases: [
-      ['كَمِ السَّاعَةُ؟', 'kami s-sāʿa?', 'What time is it?', '🕒'],
-      ['السَّاعَةُ الثَّالِثَةُ.', 'as-sāʿatu th-thālitha.', "It's three o'clock.", '🕒'],
-      ['الْيَوْمَ الْجُمُعَةُ.', 'al-yawma l-jumuʿa.', 'Today is Friday.', '📅'],
-      ['فِي أَيِّ سَاعَةٍ؟', 'fī ayyi sāʿa?', 'At what time?', '⏰'],
-      ['أَرَاكَ غَدًا!', 'arāka ghadan!', 'See you tomorrow! (to a man)', '👋', 'To a woman: أَرَاكِ غَدًا (arāki).', ['اراك غدا']],
-      ['أَنَا مَشْغُولٌ الْآنَ.', 'anā mashghūlun al-ān.', "I'm busy now. (man)", '📵', 'A woman says مَشْغُولَةٌ (mashghūla).', ['انا مشغولة الآن']],
+      ['قَدّيش السّاعة؟', 'ʾaddēsh is-sāʿa?', 'What time is it?', '🕒', null, { msa: ['كَمِ السَّاعَةُ؟', 'kami s-sāʿa?'] }],
+      ['السّاعة تْلاتة.', 'is-sāʿa tlēte.', "It's three o'clock.", '🕒', 'Spoken Arabic just uses the normal number. Standard uses “the third hour”.', { msa: ['السَّاعَةُ الثَّالِثَةُ', 'as-sāʿatu th-thālitha'] }],
+      ['اليَوم الجُمْعة.', 'il-yōm ij-jumʿa.', 'Today is Friday.', '📅', null, { msa: ['الْيَوْمَ الْجُمُعَةُ', 'al-yawma l-jumuʿa'] }],
+      ['أَيّا ساعة؟', 'ayya sāʿa?', 'At what time?', '⏰', 'Also: عَ قَدّيش؟ (ʿa ʾaddēsh?)', { msa: ['فِي أَيِّ سَاعَةٍ؟', 'fī ayyi sāʿa?'], alt: ['ع قديش'] }],
+      ['مِنْشوفَك بُكْرا!', 'minshūfak bukra!', 'See you tomorrow! (to a man)', '👋', 'Literally “we see you tomorrow”. To a woman: مِنْشوفِك (minshūfik).', { msa: ['أَرَاكَ غَدًا', 'arāka ghadan'], alt: ['منشوفك بكرا'] }],
+      ['أَنا مَشْغول هَلَّق.', 'ana mashghūl hallaʾ.', "I'm busy now. (man)", '📵', 'A woman says مَشْغولة (mashghūle).', { msa: ['أَنَا مَشْغُولٌ الْآنَ', 'anā mashghūlun al-ān'], alt: ['أنا مشغولة هلق'] }],
     ],
     grammar: {
-      title: 'Telling the time with ordinal numbers',
-      body: `<p>Arabic tells time with “the <b>third</b> hour”, “the <b>fifth</b> hour”… using ordinal numbers:</p>
-<table><tr><td>1:00</td><td>السَّاعَةُ الْوَاحِدَةُ</td><td><i>as-sāʿatu l-wāḥida</i></td></tr>
-<tr><td>2:00</td><td>السَّاعَةُ الثَّانِيَةُ</td><td><i>as-sāʿatu th-thāniya</i></td></tr>
-<tr><td>3:00</td><td>السَّاعَةُ الثَّالِثَةُ</td><td><i>as-sāʿatu th-thālitha</i></td></tr>
-<tr><td>+ ¼</td><td>وَالرُّبْعُ</td><td><i>wa-r-rubʿ</i></td></tr>
-<tr><td>+ ½</td><td>وَالنِّصْفُ</td><td><i>wa-n-niṣf</i></td></tr>
-<tr><td>− ¼</td><td>إِلَّا رُبْعًا</td><td><i>illā rubʿan</i></td></tr></table>
-<p><b>Culture:</b> in most Arab countries the weekend is <b>Friday–Saturday</b>, and the week starts on Sunday — which is why Sunday is “day one”.</p>`,
+      title: 'Telling the time the spoken way',
+      body: `<p>Spoken Arabic is simpler than standard here: <b>السّاعة + number</b>.</p>
+<table><tr><td>1:00</td><td>السّاعة وِحْدة</td><td><i>is-sāʿa wiḥde</i></td></tr>
+<tr><td>3:00</td><td>السّاعة تْلاتة</td><td><i>is-sāʿa tlēte</i></td></tr>
+<tr><td>+ ¼</td><td>ورُبْع</td><td><i>w rubʿ</i></td></tr>
+<tr><td>+ ½</td><td>ونُصّ</td><td><i>w nuṣṣ</i></td></tr>
+<tr><td>− ¼</td><td>إِلّا رُبْع</td><td><i>illa rubʿ</i></td></tr></table>
+<p>Standard Arabic uses ordinals instead: السَّاعَةُ الثَّالِثَةُ — “the third hour”.</p>
+<p><b>Culture:</b> the weekend is <b>Friday</b> (and Saturday in Jordan); in Lebanon it's Saturday–Sunday.</p>`,
     },
     dialogue: {
       scene: 'Two friends make plans.',
       lines: [
-        ['Ali', 'هَلْ أَنْتِ مَشْغُولَةٌ الْيَوْمَ؟', 'hal anti mashghūlatun al-yawm?', 'Are you busy today?'],
-        ['Rana', 'نَعَمْ، أَنَا مَشْغُولَةٌ الْآنَ. وَغَدًا؟', 'naʿam, anā mashghūlatun al-ān. wa-ghadan?', "Yes, I'm busy now. What about tomorrow?"],
-        ['Ali', 'غَدًا السَّبْتُ. طَيِّب!', 'ghadan as-sabt. ṭayyib!', "Tomorrow is Saturday. Okay!"],
-        ['Rana', 'فِي أَيِّ سَاعَةٍ؟', 'fī ayyi sāʿa?', 'At what time?'],
-        ['Ali', 'فِي السَّاعَةِ الْخَامِسَةِ.', 'fī s-sāʿati l-khāmisa.', "At five o'clock."],
-        ['Rana', 'مُمْتَاز! أَرَاكَ غَدًا!', 'mumtāz! arāka ghadan!', 'Excellent! See you tomorrow!'],
+        ['Ali', 'إِنْتِ مَشْغولة اليَوم؟', 'inti mashghūle il-yōm?', 'Are you busy today?'],
+        ['Rana', 'إي، مَشْغولة هَلَّق. وبُكْرا؟', 'ē, mashghūle hallaʾ. w bukra?', "Yes, I'm busy now. What about tomorrow?"],
+        ['Ali', 'بُكْرا السَّبْت. ماشي!', 'bukra is-sabt. māshi!', "Tomorrow is Saturday. Okay!"],
+        ['Rana', 'أَيّا ساعة؟', 'ayya sāʿa?', 'At what time?'],
+        ['Ali', 'السّاعة خَمْسة؟', 'is-sāʿa khamse?', "At five?"],
+        ['Rana', 'تَمام! مِنْشوفَك بُكْرا!', 'tamām! minshūfak bukra!', 'Great! See you tomorrow!'],
       ],
       questions: [
         { q: 'When will they meet?', options: ['Saturday at 5', 'Friday at 5', 'Saturday at 3'], a: 0 },
-        { q: 'Why can\'t Rana meet today?', options: ['She is busy', 'She is ill', 'She is travelling'], a: 0 },
+        { q: "Why can't Rana meet today?", options: ['She is busy', 'She is ill', 'She is travelling'], a: 0 },
       ],
     },
     roleplay: {
       scene: 'A friend wants to meet up.',
       turns: [
-        { p: ['هَلْ أَنْتَ مَشْغُولٌ الْيَوْمَ؟', 'hal anta mashghūlun al-yawm?', 'Are you busy today?'], cue: "Say: yes, I'm busy now.", a: ['نَعَمْ، أَنَا مَشْغُولٌ الْآنَ', 'نَعَمْ، أَنَا مَشْغُولَةٌ الْآنَ', 'أَنَا مَشْغُولٌ'], atr: 'naʿam, anā mashghūlun al-ān' },
-        { p: ['وَغَدًا؟ فِي السَّاعَةِ الرَّابِعَةِ؟', 'wa-ghadan? fī s-sāʿati r-rābiʿa?', "And tomorrow? At four o'clock?"], cue: 'Say: okay!', a: ['طَيِّب', 'نَعَمْ، طَيِّب'], atr: 'ṭayyib' },
-        { p: ['مُمْتَاز!', 'mumtāz!', 'Excellent!'], cue: 'Say: see you tomorrow!', a: ['أَرَاكَ غَدًا', 'أَرَاكِ غَدًا'], atr: 'arāka ghadan' },
+        { p: ['إِنْتَ مَشْغول اليَوم؟', 'inte mashghūl il-yōm?', 'Are you busy today?'], cue: "Say: yes, I'm busy now.", a: ['إي، أَنا مَشْغول هَلَّق', 'إي، مَشْغول هَلَّق', 'أَنا مَشْغولة هَلَّق', 'أَنا مَشْغول'], atr: 'ē, ana mashghūl hallaʾ' },
+        { p: ['وبُكْرا؟ السّاعة أَرْبْعة؟', 'w bukra? is-sāʿa arbʿa?', 'And tomorrow? At four?'], cue: 'Say: okay!', a: ['ماشي', 'تَمام', 'طَيِّب', 'أَكيد'], atr: 'māshi' },
+        { p: ['تَمام!', 'tamām!', 'Great!'], cue: 'Say: see you tomorrow!', a: ['مِنْشوفَك بُكْرا', 'مِنْشوفِك بُكْرا', 'أَرَاكَ غَدًا'], atr: 'minshūfak bukra' },
       ],
     },
   },
   {
     id: 'shopping',
-    title: 'فِي السُّوقِ',
+    title: 'بالسّوق',
     subtitle: 'Shopping & prices',
     icon: '🛍️',
     goal: 'I can ask prices, bargain politely and pay.',
     words: [
-      ['مَحَلّ', 'maḥall', 'shop', '🏬'],
-      ['سِعْر', 'siʿr', 'price', '🏷️'],
-      ['غَالٍ', 'ghālin', 'expensive', '💸', 'Often said غَالِي (ghālī) in speech.', ['غالي']],
-      ['رَخِيص', 'rakhīṣ', 'cheap', '🪙'],
-      ['نُقُود', 'nuqūd', 'money', '💰'],
-      ['دِرْهَم', 'dirham', 'dirham (currency)', '💵'],
-      ['قَمِيص', 'qamīṣ', 'shirt', '👔'],
-      ['حِذَاء', 'ḥidhāʾ', 'shoe(s)', '👟'],
-      ['فُسْتَان', 'fustān', 'dress', '👗'],
-      ['حَقِيبَة', 'ḥaqība', 'bag', '👜'],
-      ['هَذَا', 'hādhā', 'this (m)', '👇'],
-      ['هَذِهِ', 'hādhihi', 'this (f)', '👇'],
-      ['بِطَاقَة', 'biṭāqa', 'card', '💳'],
+      ['مَحَلّ', 'maḥall', 'shop', '🏬', null, { msa: ['مَحَلّ', 'maḥall'] }],
+      ['سِعِر', 'siʿir', 'price', '🏷️', null, { msa: ['سِعْر', 'siʿr'], alt: ['سعر'] }],
+      ['غالي', 'ghāli', 'expensive', '💸', null, { msa: ['غَالٍ', 'ghālin'] }],
+      ['رْخيص', 'rkhīṣ', 'cheap', '🪙', null, { msa: ['رَخِيص', 'rakhīṣ'], alt: ['رخيص'] }],
+      ['مَصاري', 'maṣāri', 'money', '💰', null, { msa: ['نُقُود', 'nuqūd'] }],
+      ['ليرة', 'līra', 'lira / pound (currency)', '💵', 'Lebanon and Syria use the lira; Jordan the dinar (دينار).', { msa: ['لِيرَة', 'līra'] }],
+      ['قَميص', 'ʾamīṣ', 'shirt', '👔', null, { msa: ['قَمِيص', 'qamīṣ'] }],
+      ['صَبّاط', 'ṣabbāṭ', 'shoe(s)', '👟', null, { msa: ['حِذَاء', 'ḥidhāʾ'] }],
+      ['فُسْتان', 'fustān', 'dress', '👗', null, { msa: ['فُسْتَان', 'fustān'] }],
+      ['شَنْطة', 'shanṭa', 'bag', '👜', null, { msa: ['حَقِيبَة', 'ḥaqība'] }],
+      ['هاد', 'hād', 'this (m)', '👇', null, { msa: ['هَذَا', 'hādhā'] }],
+      ['هاي', 'hāy', 'this (f)', '👇', null, { msa: ['هَذِهِ', 'hādhihi'] }],
+      ['كَرْت', 'kart', 'card', '💳', null, { msa: ['بِطَاقَة', 'biṭāqa'] }],
     ],
     phrases: [
-      ['بِكَمْ هَذَا؟', 'bi-kam hādhā?', 'How much is this?', '🏷️'],
-      ['هَذَا غَالٍ جِدًّا!', 'hādhā ghālin jiddan!', "This is very expensive!", '💸', null, ['هذا غالي جدا']],
-      ['هَلْ عِنْدَكَ مَقَاسٌ أَكْبَرُ؟', 'hal ʿindaka maqāsun akbar?', 'Do you have a bigger size?', '📏'],
-      ['سَآخُذُهُ.', 'saʾākhudhuhu.', "I'll take it.", '🛍️', 'For a feminine item (حَقِيبَة): سَآخُذُهَا (saʾākhudhuhā).', ['سآخذها']],
-      ['هَلْ أَسْتَطِيعُ الدَّفْعَ بِالْبِطَاقَةِ؟', 'hal astaṭīʿu d-dafʿa bil-biṭāqa?', 'Can I pay by card?', '💳'],
-      ['أَنَا أَتَفَرَّجُ فَقَطْ.', 'anā atafarraju faqaṭ.', "I'm just looking.", '👀'],
+      ['بِقَدّيش هاد؟', 'b-ʾaddēsh hād?', 'How much is this?', '🏷️', 'Also: قَدّيش حَقّو؟ (ʾaddēsh ḥaʾʾo?), “how much is its price?”', { msa: ['بِكَمْ هَذَا؟', 'bi-kam hādhā?'], alt: ['قديش حقو'] }],
+      ['هاد كْتير غالي!', 'hād ktīr ghāli!', "This is too expensive!", '💸', null, { msa: ['هَذَا غَالٍ جِدًّا', 'hādhā ghālin jiddan'] }],
+      ['عِنْدَك قْياس أَكْبَر؟', 'ʿindak ʾyās akbar?', 'Do you have a bigger size?', '📏', null, { msa: ['هَلْ عِنْدَكَ مَقَاسٌ أَكْبَرُ؟', 'hal ʿindaka maqāsun akbar?'] }],
+      ['رَح آخْدو.', 'raḥ ākhdo.', "I'll take it.", '🛍️', 'رَح (raḥ) = will. For a feminine item (شَنْطة): رَح آخْدا (ākhda).', { msa: ['سَآخُذُهُ', 'saʾākhudhuhu'], alt: ['رح آخدا', 'باخدو'] }],
+      ['فيني إِدْفَع بالكَرْت؟', 'fīni idfaʿ bil-kart?', 'Can I pay by card?', '💳', 'فيني (fīni) = I can.', { msa: ['هَلْ أَسْتَطِيعُ الدَّفْعَ بِالْبِطَاقَةِ؟', 'hal astaṭīʿu d-dafʿa bil-biṭāqa?'] }],
+      ['عَم إِتْفَرَّج بَسّ.', 'ʿam itfarraj bass.', "I'm just looking.", '👀', 'عَم (ʿam) = “-ing”, an action happening now.', { msa: ['أَنَا أَتَفَرَّجُ فَقَطْ', 'anā atafarraju faqaṭ'] }],
     ],
     grammar: {
-      title: 'Bargaining culture & "how much?"',
-      body: `<p><b>بِكَمْ؟</b> (<i>bi-kam?</i>) = “for how much?” — the standard way to ask a price. Add هَذَا/هَذِهِ: <span lang="ar">بِكَمْ هَذِهِ الْحَقِيبَةُ؟</span></p>
-<p>In traditional markets (سُوق), bargaining is expected and friendly. Useful moves:</p>
-<table><tr><td>غَالٍ جِدًّا!</td><td><i>ghālin jiddan!</i></td><td>Very expensive!</td></tr>
-<tr><td>آخِرُ سِعْرٍ؟</td><td><i>ākhiru siʿr?</i></td><td>Your last (best) price?</td></tr>
-<tr><td>سَآخُذُهُ</td><td><i>saʾākhudhuhu</i></td><td>I'll take it</td></tr></table>
-<p><b>Future:</b> the prefix <b>سَـ</b> (sa-) turns a present verb into a future: آخُذُ (I take) → <b>سَ</b>آخُذُ (I will take).</p>`,
+      title: 'Bargaining, “can” and “will”',
+      body: `<p>In a سوق, friendly bargaining is expected:</p>
+<table><tr><td>بِقَدّيش؟</td><td><i>b-ʾaddēsh?</i></td><td>How much?</td></tr>
+<tr><td>كْتير غالي!</td><td><i>ktīr ghāli!</i></td><td>Too expensive!</td></tr>
+<tr><td>آخِر سِعِر؟</td><td><i>ākhir siʿir?</i></td><td>Your best price?</td></tr>
+<tr><td>رَح آخْدو</td><td><i>raḥ ākhdo</i></td><td>I'll take it</td></tr></table>
+<p><b>رَح</b> (raḥ) + verb = future “will”. Standard Arabic uses the prefix سَـ: سَآخُذُهُ.</p>
+<p><b>فيني</b> (fīni) = I can, <b>فيك</b> (fīk) = you can.</p>`,
     },
     dialogue: {
-      scene: 'In a souk in Marrakesh.',
+      scene: 'In the old souk in Damascus.',
       lines: [
-        ['Seller', 'أَهْلًا وَسَهْلًا! تَفَضَّلْ.', 'ahlan wa-sahlan! tafaḍḍal.', 'Welcome! Come in.'],
-        ['Buyer', 'شُكْرًا. بِكَمْ هَذِهِ الْحَقِيبَةُ؟', 'shukran. bi-kam hādhihi l-ḥaqība?', 'Thanks. How much is this bag?'],
-        ['Seller', 'مِئَتَا دِرْهَمٍ.', 'miʾatā dirham.', 'Two hundred dirhams.'],
-        ['Buyer', 'هَذَا غَالٍ جِدًّا!', 'hādhā ghālin jiddan!', "That's very expensive!"],
-        ['Seller', 'طَيِّب، مِئَةٌ وَخَمْسُونَ.', 'ṭayyib, miʾatun wa-khamsūn.', 'Okay, one hundred and fifty.'],
-        ['Buyer', 'سَآخُذُهَا!', 'saʾākhudhuhā!', "I'll take it!"],
+        ['Seller', 'أَهْلا وسَهْلا! تْفَضَّل.', 'ahla w sahla! tfaḍḍal.', 'Welcome! Come in.'],
+        ['Buyer', 'شُكْرًا. بِقَدّيش هاي الشَّنْطة؟', 'shukran. b-ʾaddēsh hāy ish-shanṭa?', 'Thanks. How much is this bag?'],
+        ['Seller', 'مِيتين ليرة.', 'mītēn līra.', 'Two hundred lira.'],
+        ['Buyer', 'كْتير غالي!', 'ktīr ghāli!', "That's too expensive!"],
+        ['Seller', 'كِرْمالَك، مِيّة وخَمْسين.', 'kirmālak, miyye w khamsīn.', 'For you, one hundred and fifty.'],
+        ['Buyer', 'ماشي، رَح آخْدا!', 'māshi, raḥ ākhda!', "Okay, I'll take it!"],
       ],
       questions: [
-        { q: 'What was the first price?', options: ['200 dirhams', '150 dirhams', '100 dirhams'], a: 0 },
-        { q: 'Did the buyer get a discount?', options: ['Yes, 50 dirhams', 'No', 'Yes, 100 dirhams'], a: 0 },
+        { q: 'What was the first price?', options: ['200 lira', '150 lira', '100 lira'], a: 0 },
+        { q: 'Did the buyer get a discount?', options: ['Yes, 50 lira', 'No', 'Yes, 100 lira'], a: 0 },
       ],
     },
     roleplay: {
       scene: 'Buying a shirt at a market stall.',
       turns: [
-        { p: ['أَهْلًا وَسَهْلًا!', 'ahlan wa-sahlan!', 'Welcome!'], cue: 'Ask how much this is.', a: ['بِكَمْ هَذَا؟', 'بِكَمْ هَذَا الْقَمِيصُ؟'], atr: 'bi-kam hādhā?' },
-        { p: ['خَمْسُونَ دِرْهَمًا.', 'khamsūna dirhaman.', 'Fifty dirhams.'], cue: "Say it's very expensive.", a: ['هَذَا غَالٍ جِدًّا', 'غَالٍ جِدًّا'], atr: 'hādhā ghālin jiddan' },
-        { p: ['طَيِّب، أَرْبَعُونَ.', 'ṭayyib, arbaʿūn.', 'Okay, forty.'], cue: "Say: I'll take it.", a: ['سَآخُذُهُ', 'طَيِّب، سَآخُذُهُ'], atr: 'saʾākhudhuhu' },
+        { p: ['أَهْلا وسَهْلا!', 'ahla w sahla!', 'Welcome!'], cue: 'Ask how much this is.', a: ['بِقَدّيش هاد؟', 'قَدّيش حَقّو؟', 'بِقَدّيش هاد القَميص؟', 'بِكَمْ هَذَا؟'], atr: 'b-ʾaddēsh hād?' },
+        { p: ['خَمْسين ليرة.', 'khamsīn līra.', 'Fifty lira.'], cue: "Say it's too expensive.", a: ['هاد كْتير غالي', 'كْتير غالي', 'هَذَا غَالٍ جِدًّا'], atr: 'hād ktīr ghāli' },
+        { p: ['ماشي، أَرْبْعين.', 'māshi, arbʿīn.', 'Okay, forty.'], cue: "Say: I'll take it.", a: ['رَح آخْدو', 'ماشي، رَح آخْدو', 'سَآخُذُهُ'], atr: 'raḥ ākhdo' },
       ],
     },
   },
   {
     id: 'describing',
-    title: 'الْأَلْوَان',
+    title: 'الأَلْوان',
     subtitle: 'Colours & descriptions',
     icon: '🎨',
     goal: 'I can describe people and things using colours and adjectives.',
     words: [
-      ['أَحْمَر', 'aḥmar', 'red', '🟥', 'Feminine: حَمْرَاء (ḥamrāʾ).'],
-      ['أَزْرَق', 'azraq', 'blue', '🟦', 'Feminine: زَرْقَاء (zarqāʾ).'],
-      ['أَخْضَر', 'akhḍar', 'green', '🟩', 'Feminine: خَضْرَاء (khaḍrāʾ).'],
-      ['أَصْفَر', 'aṣfar', 'yellow', '🟨'],
-      ['أَبْيَض', 'abyaḍ', 'white', '⬜', 'Feminine: بَيْضَاء (bayḍāʾ).'],
-      ['أَسْوَد', 'aswad', 'black', '⬛'],
-      ['كَبِير', 'kabīr', 'big', '🐘'],
-      ['صَغِير', 'ṣaghīr', 'small', '🐭'],
-      ['جَدِيد', 'jadīd', 'new', '✨'],
-      ['قَدِيم', 'qadīm', 'old (things)', '🏚️'],
-      ['جَمِيل', 'jamīl', 'beautiful', '🌸'],
-      ['طَوِيل', 'ṭawīl', 'tall / long', '🦒'],
-      ['لَطِيف', 'laṭīf', 'nice / kind', '😄'],
+      ['أَحْمَر', 'aḥmar', 'red', '🟥', 'Feminine: حَمْرا (ḥamra).', { msa: ['أَحْمَر', 'aḥmar'] }],
+      ['أَزْرَق', 'azraʾ', 'blue', '🟦', 'Feminine: زَرْقا (zarʾa).', { msa: ['أَزْرَق', 'azraq'] }],
+      ['أَخْضَر', 'akhḍar', 'green', '🟩', 'Feminine: خَضْرا (khaḍra).', { msa: ['أَخْضَر', 'akhḍar'] }],
+      ['أَصْفَر', 'aṣfar', 'yellow', '🟨', null, { msa: ['أَصْفَر', 'aṣfar'] }],
+      ['أَبْيَض', 'abyaḍ', 'white', '⬜', 'Feminine: بَيْضا (bayḍa).', { msa: ['أَبْيَض', 'abyaḍ'] }],
+      ['أَسْوَد', 'aswad', 'black', '⬛', null, { msa: ['أَسْوَد', 'aswad'] }],
+      ['كْبير', 'kbīr', 'big', '🐘', null, { msa: ['كَبِير', 'kabīr'], alt: ['كبير'] }],
+      ['زْغير', 'zghīr', 'small', '🐭', 'Standard ص becomes ز in speech: صَغِير → زْغير.', { msa: ['صَغِير', 'ṣaghīr'], alt: ['زغير'] }],
+      ['جْديد', 'jdīd', 'new', '✨', null, { msa: ['جَدِيد', 'jadīd'], alt: ['جديد'] }],
+      ['قَديم', 'ʾadīm', 'old (things)', '🏚️', null, { msa: ['قَدِيم', 'qadīm'] }],
+      ['حِلو', 'ḥilu', 'nice / beautiful / sweet', '🌸', 'Used for everything nice — people, places, food, ideas.', { msa: ['جَمِيل', 'jamīl'] }],
+      ['طَويل', 'ṭawīl', 'tall / long', '🦒', null, { msa: ['طَوِيل', 'ṭawīl'] }],
+      ['لَطيف', 'laṭīf', 'kind / nice', '😄', null, { msa: ['لَطِيف', 'laṭīf'] }],
     ],
     phrases: [
-      ['الْبَيْتُ كَبِيرٌ.', 'al-baytu kabīr.', 'The house is big.', '🏠'],
-      ['السَّيَّارَةُ جَدِيدَةٌ.', 'as-sayyāratu jadīda.', 'The car is new.', '🚗'],
-      ['مَا لَوْنُهُ؟', 'mā lawnuhu?', 'What colour is it? (m)', '🎨'],
-      ['لَوْنُهُ أَحْمَرُ.', 'lawnuhu aḥmar.', 'It is red. (lit. its colour is red)', '🟥'],
-      ['صَدِيقِي لَطِيفٌ جِدًّا.', 'ṣadīqī laṭīfun jiddan.', 'My friend is very nice.', '😄'],
-      ['هِيَ طَوِيلَةٌ.', 'hiya ṭawīla.', 'She is tall.', '🦒'],
+      ['البَيت كْبير.', 'il-bēt kbīr.', 'The house is big.', '🏠', null, { msa: ['الْبَيْتُ كَبِيرٌ', 'al-baytu kabīr'] }],
+      ['السَّيّارة جْديدة.', 'is-sayyāra jdīde.', 'The car is new.', '🚗', null, { msa: ['السَّيَّارَةُ جَدِيدَةٌ', 'as-sayyāratu jadīda'] }],
+      ['شو لَوْنو؟', 'shu lōno?', 'What colour is it? (m)', '🎨', 'For a feminine thing: شو لَوْنا؟ (shu lōna?)', { msa: ['مَا لَوْنُهُ؟', 'mā lawnuhu?'] }],
+      ['لَوْنو أَحْمَر.', 'lōno aḥmar.', "It's red. (lit. its colour is red)", '🟥', null, { msa: ['لَوْنُهُ أَحْمَرُ', 'lawnuhu aḥmar'] }],
+      ['صاحْبي كْتير لَطيف.', 'ṣāḥbi ktīr laṭīf.', 'My friend is very kind.', '😄', null, { msa: ['صَدِيقِي لَطِيفٌ جِدًّا', 'ṣadīqī laṭīfun jiddan'] }],
+      ['هِيّ طَويلة.', 'hiyye ṭawīle.', 'She is tall.', '🦒', 'هُوّ (huwwe) = he, هِيّ (hiyye) = she.', { msa: ['هِيَ طَوِيلَةٌ', 'hiya ṭawīla'] }],
+      ['كْتير حِلو!', 'ktīr ḥilu!', 'Really nice! / So beautiful!', '😍', null, { msa: ['جَمِيلٌ جِدًّا', 'jamīlun jiddan'] }],
     ],
     grammar: {
-      title: '"The house is big" vs "a big house"',
-      body: `<p>The definite article changes the meaning:</p>
-<table><tr><td><b>الْ</b>بَيْتُ كَبِيرٌ</td><td><i>al-baytu kabīr</i></td><td>The house <b>is</b> big (a sentence)</td></tr>
-<tr><td>بَيْتٌ كَبِيرٌ</td><td><i>baytun kabīr</i></td><td>a big house</td></tr>
-<tr><td><b>الْ</b>بَيْتُ <b>الْ</b>كَبِيرُ</td><td><i>al-baytu l-kabīr</i></td><td>the big house</td></tr></table>
-<p>Adjectives agree in gender: سَيَّارَةٌ جَدِيدَ<b>ةٌ</b> (a new car). Basic colours have a special feminine pattern: أَحْمَر → <b>حَمْرَاء</b>, أَبْيَض → <b>بَيْضَاء</b>.</p>
-<p>هُوَ (<i>huwa</i>) = he/it (m), هِيَ (<i>hiya</i>) = she/it (f). Objects use the same words!</p>`,
+      title: '“The house is big” vs “a big house”',
+      body: `<p>The word for “the” changes the meaning:</p>
+<table><tr><td><b>ال</b>بَيت كْبير</td><td><i>il-bēt kbīr</i></td><td>The house <b>is</b> big</td></tr>
+<tr><td>بَيت كْبير</td><td><i>bēt kbīr</i></td><td>a big house</td></tr>
+<tr><td><b>ال</b>بَيت <b>ال</b>كْبير</td><td><i>il-bēt il-kbīr</i></td><td>the big house</td></tr></table>
+<p>Adjectives agree: سَيّارة جْديد<b>ة</b> (a new car). Colours have special feminine forms: أَحْمَر → <b>حَمْرا</b>, أَبْيَض → <b>بَيْضا</b>.</p>
+<p><b>Very:</b> كْتير comes <b>after</b> the adjective or before it for emphasis: حِلو كْتير / كْتير حِلو.</p>`,
     },
     dialogue: {
       scene: 'Talking about a new flat.',
       lines: [
-        ['Nour', 'كَيْفَ بَيْتُكَ الْجَدِيدُ؟', 'kayfa baytuka l-jadīd?', "How is your new house?"],
-        ['Yusuf', 'صَغِيرٌ، لَكِنْ جَمِيلٌ جِدًّا.', 'ṣaghīrun, lākin jamīlun jiddan.', "Small, but very beautiful."],
-        ['Nour', 'وَمَا لَوْنُ الْمَطْبَخِ؟', 'wa-mā lawnu l-maṭbakh?', 'And what colour is the kitchen?'],
-        ['Yusuf', 'أَبْيَضُ وَأَزْرَقُ.', 'abyaḍu wa-azraq.', 'White and blue.'],
-        ['Nour', 'جَمِيلٌ! وَالْجِيرَانُ؟', 'jamīl! wal-jīrān?', 'Lovely! And the neighbours?'],
-        ['Yusuf', 'لُطَفَاءُ جِدًّا.', 'luṭafāʾu jiddan.', 'Very nice.'],
+        ['Nour', 'كِيف بَيْتَك الجْديد؟', 'kīf bētak il-jdīd?', 'How is your new house?'],
+        ['Yusuf', 'زْغير، بَسّ كْتير حِلو.', 'zghīr, bass ktīr ḥilu.', 'Small, but really nice.'],
+        ['Nour', 'وشو لَوْن المَطْبَخ؟', 'w shu lōn il-maṭbakh?', 'And what colour is the kitchen?'],
+        ['Yusuf', 'أَبْيَض وأَزْرَق.', 'abyaḍ w azraʾ.', 'White and blue.'],
+        ['Nour', 'حِلو! والجيران؟', 'ḥilu! w ij-jīrān?', 'Nice! And the neighbours?'],
+        ['Yusuf', 'كْتير لُطَفا.', 'ktīr luṭafa.', 'Very kind.'],
       ],
       questions: [
-        { q: "How is Yusuf's house?", options: ['Small but beautiful', 'Big and old', 'New and ugly'], a: 0 },
+        { q: "How is Yusuf's house?", options: ['Small but nice', 'Big and old', 'New and ugly'], a: 0 },
         { q: 'What colour is the kitchen?', options: ['White and blue', 'Red and black', 'Green'], a: 0 },
       ],
     },
     roleplay: {
       scene: 'A friend asks about your new car.',
       turns: [
-        { p: ['عِنْدَكَ سَيَّارَةٌ جَدِيدَةٌ؟ كَيْفَ هِيَ؟', 'ʿindaka sayyāratun jadīda? kayfa hiya?', 'You have a new car? How is it?'], cue: "Say it's small but beautiful.", a: ['صَغِيرَةٌ لَكِنْ جَمِيلَةٌ', 'هِيَ صَغِيرَةٌ لَكِنْ جَمِيلَةٌ'], atr: 'ṣaghīratun lākin jamīla' },
-        { p: ['مَا لَوْنُهَا؟', 'mā lawnuhā?', 'What colour is it?'], cue: "Say: its colour is red.", a: ['لَوْنُهَا أَحْمَرُ', 'حَمْرَاء', 'أَحْمَر'], atr: 'lawnuhā aḥmar' },
-        { p: ['مَا شَاءَ اللَّهُ!', 'mā shāʾa llāh!', 'How wonderful!'], cue: 'Say: thank you!', a: ['شُكْرًا'], atr: 'shukran' },
+        { p: ['عِنْدَك سَيّارة جْديدة؟ كِيفا؟', 'ʿindak sayyāra jdīde? kīfa?', 'You have a new car? How is it?'], cue: "Say it's small but really nice.", a: ['زْغيرة بَسّ كْتير حِلْوة', 'زْغيرة بَسّ حِلْوة', 'صَغِيرَةٌ لَكِنْ جَمِيلَةٌ'], atr: 'zghīre bass ktīr ḥilwe' },
+        { p: ['شو لَوْنا؟', 'shu lōna?', 'What colour is it?'], cue: "Say: it's red.", a: ['لَوْنا أَحْمَر', 'حَمْرا', 'أَحْمَر'], atr: 'lōna aḥmar' },
+        { p: ['ما شاء الله!', 'mā shāʾ alla!', 'How wonderful!'], cue: 'Say: thank you!', a: ['شُكْرًا', 'مِرسي', 'يِسْلَمو'], atr: 'shukran' },
       ],
     },
   },
   {
     id: 'routine',
-    title: 'يَوْمِي',
+    title: 'نْهاري',
     subtitle: 'Daily routine & verbs',
     icon: '⏰',
     goal: 'I can describe my day and ask others about theirs.',
     words: [
-      ['أَسْتَيْقِظُ', 'astayqiẓu', 'I wake up', '⏰'],
-      ['آكُلُ', 'ākulu', 'I eat', '🍽️'],
-      ['أَشْرَبُ', 'ashrabu', 'I drink', '🥤'],
-      ['أَنَامُ', 'anāmu', 'I sleep', '😴'],
-      ['أَعْمَلُ', 'aʿmalu', 'I work', '💼'],
-      ['أَدْرُسُ', 'adrusu', 'I study', '📚'],
-      ['أَذْهَبُ', 'adhhabu', 'I go', '🚶'],
-      ['أَقْرَأُ', 'aqraʾu', 'I read', '📖'],
-      ['أَكْتُبُ', 'aktubu', 'I write', '✍️', 'Root ك-ت-ب (writing).'],
-      ['كِتَاب', 'kitāb', 'book', '📕', 'Root ك-ت-ب: “a written thing”.'],
-      ['مَكْتَب', 'maktab', 'office / desk', '🏢', 'Root ك-ت-ب: “place of writing”.'],
-      ['بَيْت', 'bayt', 'house / home', '🏠'],
-      ['كُلَّ يَوْمٍ', 'kulla yawm', 'every day', '🔁'],
+      ['بْفيق', 'bfīʾ', 'I wake up', '⏰', null, { msa: ['أَسْتَيْقِظُ', 'astayqiẓu'] }],
+      ['باكُل', 'bākul', 'I eat', '🍽️', null, { msa: ['آكُلُ', 'ākulu'] }],
+      ['بِشْرَب', 'bishrab', 'I drink', '🥤', null, { msa: ['أَشْرَبُ', 'ashrabu'] }],
+      ['بْنام', 'bnām', 'I sleep', '😴', null, { msa: ['أَنَامُ', 'anāmu'] }],
+      ['بِشْتِغِل', 'bishtighil', 'I work', '💼', null, { msa: ['أَعْمَلُ', 'aʿmalu'] }],
+      ['بِدْرُس', 'bidrus', 'I study', '📚', null, { msa: ['أَدْرُسُ', 'adrusu'] }],
+      ['بْروح', 'brūḥ', 'I go', '🚶', null, { msa: ['أَذْهَبُ', 'adhhabu'] }],
+      ['بِقْرا', 'biʾra', 'I read', '📖', null, { msa: ['أَقْرَأُ', 'aqraʾu'] }],
+      ['بِكْتُب', 'biktub', 'I write', '✍️', 'Root ك-ت-ب (writing).', { msa: ['أَكْتُبُ', 'aktubu'] }],
+      ['كْتاب', 'ktāb', 'book', '📕', 'Root ك-ت-ب: “a written thing”.', { msa: ['كِتَاب', 'kitāb'], alt: ['كتاب'] }],
+      ['مَكْتَب', 'maktab', 'office / desk', '🏢', 'Root ك-ت-ب: “place of writing”.', { msa: ['مَكْتَب', 'maktab'] }],
+      ['بَيت', 'bēt', 'house / home', '🏠', null, { msa: ['بَيْت', 'bayt'] }],
+      ['كِلّ يَوم', 'kill yōm', 'every day', '🔁', null, { msa: ['كُلَّ يَوْمٍ', 'kulla yawm'], alt: ['كل يوم'] }],
     ],
     phrases: [
-      ['أَسْتَيْقِظُ فِي السَّاعَةِ السَّابِعَةِ.', 'astayqiẓu fī s-sāʿati s-sābiʿa.', 'I wake up at seven.', '⏰'],
-      ['أَشْرَبُ الْقَهْوَةَ كُلَّ صَبَاحٍ.', 'ashrabu l-qahwata kulla ṣabāḥ.', 'I drink coffee every morning.', '☕'],
-      ['أَعْمَلُ فِي مَكْتَبٍ.', 'aʿmalu fī maktab.', 'I work in an office.', '🏢'],
-      ['أَدْرُسُ اللُّغَةَ الْعَرَبِيَّةَ.', 'adrusu l-lughata l-ʿarabiyya.', "I'm studying Arabic.", '📚'],
-      ['أَذْهَبُ إِلَى الْبَيْتِ.', 'adhhabu ilā l-bayt.', "I'm going home.", '🏠'],
-      ['مَاذَا تَفْعَلُ فِي الْمَسَاءِ؟', 'mādhā tafʿalu fī l-masāʾ?', 'What do you do in the evening?', '🌇'],
+      ['بْفيق السّاعة سَبْعة.', 'bfīʾ is-sāʿa sabʿa.', 'I wake up at seven.', '⏰', null, { msa: ['أَسْتَيْقِظُ فِي السَّاعَةِ السَّابِعَةِ', 'astayqiẓu fī s-sāʿati s-sābiʿa'] }],
+      ['بِشْرَب قَهْوة كِلّ يَوم الصُّبِح.', 'bishrab ʾahwe kill yōm iṣ-ṣubiḥ.', 'I drink coffee every morning.', '☕', null, { msa: ['أَشْرَبُ الْقَهْوَةَ كُلَّ صَبَاحٍ', 'ashrabu l-qahwata kulla ṣabāḥ'] }],
+      ['بِشْتِغِل بْمَكْتَب.', 'bishtighil b-maktab.', 'I work in an office.', '🏢', null, { msa: ['أَعْمَلُ فِي مَكْتَبٍ', 'aʿmalu fī maktab'] }],
+      ['عَم إِدْرُس عَرَبي.', 'ʿam idrus ʿarabi.', "I'm studying Arabic.", '📚', 'عَم = “-ing”, happening now.', { msa: ['أَدْرُسُ اللُّغَةَ الْعَرَبِيَّةَ', 'adrusu l-lughata l-ʿarabiyya'] }],
+      ['رايِح عالبَيت.', 'rāyeḥ ʿal-bēt.', "I'm going home. (man)", '🏠', 'A woman says رايْحة (rāyḥa).', { msa: ['أَذْهَبُ إِلَى الْبَيْتِ', 'adhhabu ilā l-bayt'], alt: ['رايحة عالبيت'] }],
+      ['شو بْتَعْمِل بالمَسا؟', 'shu btaʿmil bil-masa?', 'What do you do in the evening?', '🌇', null, { msa: ['مَاذَا تَفْعَلُ فِي الْمَسَاءِ؟', 'mādhā tafʿalu fī l-masāʾ?'] }],
     ],
     grammar: {
-      title: 'Present tense prefixes & the magic of roots',
-      body: `<p>Present-tense verbs change mainly at the <b>front</b>:</p>
-<table><tr><td><b>أَ</b>كْتُبُ</td><td><i><b>a</b>ktubu</i></td><td>I write</td></tr>
-<tr><td><b>تَ</b>كْتُبُ</td><td><i><b>ta</b>ktubu</i></td><td>you (m) write / she writes</td></tr>
-<tr><td><b>يَ</b>كْتُبُ</td><td><i><b>ya</b>ktubu</i></td><td>he writes</td></tr>
-<tr><td><b>نَ</b>كْتُبُ</td><td><i><b>na</b>ktubu</i></td><td>we write</td></tr></table>
-<p><b>Roots:</b> most Arabic words are built from 3 consonants. <b>ك-ت-ب</b> (k-t-b) = writing:</p>
-<table><tr><td>كِتَاب</td><td>kitāb</td><td>book</td></tr><tr><td>كَاتِب</td><td>kātib</td><td>writer</td></tr>
-<tr><td>مَكْتَب</td><td>maktab</td><td>office, desk</td></tr><tr><td>مَكْتَبَة</td><td>maktaba</td><td>library, bookshop</td></tr></table>
-<p>Spotting the root is one of the most powerful tools for guessing new words.</p>`,
+      title: 'b- (habit), ʿam (now), raḥ (future) — and roots',
+      body: `<p>Spoken verbs use small markers in front:</p>
+<table><tr><td><b>ب</b>ِكْتُب</td><td><i><b>b</b>iktub</i></td><td>I write (habitually)</td></tr>
+<tr><td><b>عَم</b> إِكْتُب</td><td><i><b>ʿam</b> iktub</i></td><td>I'm writing (now)</td></tr>
+<tr><td><b>رَح</b> إِكْتُب</td><td><i><b>raḥ</b> iktub</i></td><td>I will write</td></tr></table>
+<p>Person prefixes: <b>b-</b>iktub (I), <b>bti</b>ktub (you), <b>byi</b>ktub (he), <b>bni</b>ktub (we). Standard Arabic: أَكْتُبُ، تَكْتُبُ، يَكْتُبُ، نَكْتُبُ.</p>
+<p><b>Roots:</b> ك-ت-ب (k-t-b) = writing → كْتاب (book), كاتِب (writer), مَكْتَب (office), مَكْتَبة (library). Roots work the same in spoken and standard Arabic!</p>`,
     },
     dialogue: {
       scene: 'Chatting about daily life.',
       lines: [
-        ['Salma', 'مَتَى تَسْتَيْقِظُ؟', 'matā tastayqiẓ?', 'When do you wake up?'],
-        ['Ben', 'أَسْتَيْقِظُ فِي السَّاعَةِ السَّابِعَةِ، ثُمَّ أَشْرَبُ الْقَهْوَةَ.', 'astayqiẓu fī s-sāʿati s-sābiʿa, thumma ashrabu l-qahwa.', 'I wake up at seven, then I drink coffee.'],
-        ['Salma', 'هَلْ تَعْمَلُ فِي مَكْتَبٍ؟', 'hal taʿmalu fī maktab?', 'Do you work in an office?'],
-        ['Ben', 'نَعَمْ. وَفِي الْمَسَاءِ أَدْرُسُ الْعَرَبِيَّةَ.', 'naʿam. wa-fī l-masāʾ adrusu l-ʿarabiyya.', 'Yes. And in the evening I study Arabic.'],
-        ['Salma', 'مُمْتَاز! وَمَاذَا تَفْعَلُ يَوْمَ الْجُمُعَةِ؟', 'mumtāz! wa-mādhā tafʿalu yawma l-jumuʿa?', 'Excellent! And what do you do on Friday?'],
-        ['Ben', 'أَقْرَأُ كِتَابًا وَأَنَامُ كَثِيرًا!', 'aqraʾu kitāban wa-anāmu kathīran!', 'I read a book and sleep a lot!'],
+        ['Salma', 'أَيّا ساعة بْتِفيق؟', 'ayya sāʿa btifīʾ?', 'What time do you wake up?'],
+        ['Ben', 'بْفيق السّاعة سَبْعة، وبَعْدين بِشْرَب قَهْوة.', 'bfīʾ is-sāʿa sabʿa, w baʿdēn bishrab ʾahwe.', 'I wake up at seven, then I drink coffee.'],
+        ['Salma', 'بْتِشْتِغِل بْمَكْتَب؟', 'btishtighil b-maktab?', 'Do you work in an office?'],
+        ['Ben', 'إي. وبالمَسا عَم إِدْرُس عَرَبي.', 'ē. w bil-masa ʿam idrus ʿarabi.', "Yes. And in the evenings I'm studying Arabic."],
+        ['Salma', 'بْرافو! وشو بْتَعْمِل يَوم الجُمْعة؟', 'brāvo! w shu btaʿmil yōm ij-jumʿa?', 'Well done! And what do you do on Fridays?'],
+        ['Ben', 'بِقْرا كْتاب وبْنام كْتير!', 'biʾra ktāb w bnām ktīr!', 'I read a book and sleep a lot!'],
       ],
       questions: [
         { q: 'When does Ben study Arabic?', options: ['In the evening', 'In the morning', 'On Friday'], a: 0 },
@@ -636,9 +643,9 @@ export default [
     roleplay: {
       scene: 'A language partner asks about your routine.',
       turns: [
-        { p: ['مَتَى تَسْتَيْقِظُ؟', 'matā tastayqiẓ?', 'When do you wake up?'], cue: 'Say you wake up at seven.', a: ['أَسْتَيْقِظُ فِي السَّاعَةِ السَّابِعَةِ', 'فِي السَّاعَةِ السَّابِعَةِ'], atr: 'astayqiẓu fī s-sāʿati s-sābiʿa' },
-        { p: ['أَيْنَ تَعْمَلُ؟', 'ayna taʿmal?', 'Where do you work?'], cue: 'Say you work in an office.', a: ['أَعْمَلُ فِي مَكْتَبٍ'], atr: 'aʿmalu fī maktab' },
-        { p: ['وَمَاذَا تَفْعَلُ فِي الْمَسَاءِ؟', 'wa-mādhā tafʿalu fī l-masāʾ?', 'And what do you do in the evening?'], cue: 'Say you study Arabic.', a: ['أَدْرُسُ اللُّغَةَ الْعَرَبِيَّةَ', 'أَدْرُسُ الْعَرَبِيَّةَ'], atr: 'adrusu l-lughata l-ʿarabiyya' },
+        { p: ['أَيّا ساعة بْتِفيق؟', 'ayya sāʿa btifīʾ?', 'What time do you wake up?'], cue: 'Say you wake up at seven.', a: ['بْفيق السّاعة سَبْعة', 'السّاعة سَبْعة', 'أَسْتَيْقِظُ فِي السَّاعَةِ السَّابِعَةِ'], atr: 'bfīʾ is-sāʿa sabʿa' },
+        { p: ['وَين بْتِشْتِغِل؟', 'wēn btishtighil?', 'Where do you work?'], cue: 'Say you work in an office.', a: ['بِشْتِغِل بْمَكْتَب', 'بْمَكْتَب', 'أَعْمَلُ فِي مَكْتَبٍ'], atr: 'bishtighil b-maktab' },
+        { p: ['وشو بْتَعْمِل بالمَسا؟', 'w shu btaʿmil bil-masa?', 'And what do you do in the evening?'], cue: "Say you're studying Arabic.", a: ['عَم إِدْرُس عَرَبي', 'بِدْرُس عَرَبي', 'أَدْرُسُ الْعَرَبِيَّةَ'], atr: 'ʿam idrus ʿarabi' },
       ],
     },
   },
@@ -647,110 +654,111 @@ export default [
     title: 'السَّفَر',
     subtitle: 'Travel & transport',
     icon: '✈️',
-    goal: 'I can buy a ticket, ask about departures and check in.',
+    goal: 'I can buy a ticket, ask about departures and get a taxi.',
     words: [
-      ['سَفَر', 'safar', 'travel', '🧳', 'English “safari” comes from this root.'],
-      ['طَائِرَة', 'ṭāʾira', 'plane', '✈️', 'Root ط-ي-ر (to fly) — “the flying one”.'],
-      ['قِطَار', 'qiṭār', 'train', '🚆'],
-      ['سَيَّارَة', 'sayyāra', 'car', '🚗'],
-      ['حَافِلَة', 'ḥāfila', 'bus', '🚌'],
-      ['تَاكْسِي', 'tāksī', 'taxi', '🚕'],
-      ['تَذْكِرَة', 'tadhkira', 'ticket', '🎫'],
-      ['مَطَار', 'maṭār', 'airport', '🛫', 'Root ط-ي-ر again — “place of flying”.'],
-      ['جَوَازُ سَفَرٍ', 'jawāzu safar', 'passport', '🛂'],
-      ['أَمْتِعَة', 'amtiʿa', 'luggage', '🧳'],
-      ['غُرْفَة', 'ghurfa', 'room', '🛏️'],
-      ['حَجْز', 'ḥajz', 'reservation', '📋'],
+      ['سَفَر', 'safar', 'travel', '🧳', 'English “safari” comes from this root.', { msa: ['سَفَر', 'safar'] }],
+      ['طَيّارة', 'ṭayyāra', 'plane', '✈️', 'Root ط-ي-ر (to fly).', { msa: ['طَائِرَة', 'ṭāʾira'] }],
+      ['سَيّارة', 'sayyāra', 'car', '🚗', null, { msa: ['سَيَّارَة', 'sayyāra'] }],
+      ['باص', 'bāṣ', 'bus', '🚌', 'Also سِرْفيس (servīs), a shared minibus taxi.', { msa: ['حَافِلَة', 'ḥāfila'] }],
+      ['تاكْسي', 'tāksi', 'taxi', '🚕', null, { msa: ['سَيَّارَةُ أُجْرَة', 'sayyāratu ujra'] }],
+      ['تَذْكَرة', 'tazkara', 'ticket', '🎫', 'Spoken ذ often becomes ز: تَذْكِرَة → tazkara.', { msa: ['تَذْكِرَة', 'tadhkira'] }],
+      ['مَطار', 'maṭār', 'airport', '🛫', 'Root ط-ي-ر again: “place of flying”.', { msa: ['مَطَار', 'maṭār'] }],
+      ['باسْبور', 'basbōr', 'passport', '🛂', null, { msa: ['جَوَازُ سَفَرٍ', 'jawāzu safar'] }],
+      ['شَنَط', 'shanaṭ', 'bags / luggage', '🧳', null, { msa: ['أَمْتِعَة', 'amtiʿa'] }],
+      ['أوضة', 'ʾōḍa', 'room', '🛏️', 'From Turkish “oda”.', { msa: ['غُرْفَة', 'ghurfa'], alt: ['غرفة'] }],
+      ['حَجِز', 'ḥajiz', 'reservation', '📋', null, { msa: ['حَجْز', 'ḥajz'], alt: ['حجز'] }],
+      ['إِيمْتى', 'ēmta', 'when?', '🕘', null, { msa: ['مَتَى', 'matā'], alt: ['امتى'] }],
     ],
     phrases: [
-      ['تَذْكِرَةٌ إِلَى الْقَاهِرَةِ مِنْ فَضْلِكَ.', 'tadhkiratun ilā l-qāhira min faḍlika.', 'A ticket to Cairo, please.', '🎫'],
-      ['مَتَى يُغَادِرُ الْقِطَارُ؟', 'matā yughādiru l-qiṭār?', 'When does the train leave?', '🕘'],
-      ['ذَهَابٌ وَعَوْدَةٌ.', 'dhahābun wa-ʿawda.', 'Return (round trip).', '🔁'],
-      ['عِنْدِي حَجْزٌ.', 'ʿindī ḥajz.', 'I have a reservation.', '📋'],
-      ['أَيْنَ مَوْقِفُ الْحَافِلَةِ؟', 'ayna mawqifu l-ḥāfila?', 'Where is the bus stop?', '🚏'],
-      ['خُذْنِي إِلَى الْفُنْدُقِ مِنْ فَضْلِكَ.', 'khudhnī ilā l-funduq min faḍlika.', 'Take me to the hotel, please.', '🚕'],
-      ['الْقِطَارُ مُتَأَخِّرٌ.', 'al-qiṭāru mutaʾakhkhir.', 'The train is late.', '⌛'],
+      ['بَدّي تَذْكَرة عَ عَمّان لَو سَمَحْت.', 'biddi tazkara ʿa ʿAmmān law samaḥt.', 'A ticket to Amman, please.', '🎫', 'عَ (ʿa) = to, a short form of عَلى.', { msa: ['تَذْكِرَةٌ إِلَى عَمَّانَ مِنْ فَضْلِكَ', 'tadhkiratun ilā ʿAmmān min faḍlika'] }],
+      ['إِيمْتى بْيِطْلَع الباص؟', 'ēmta byiṭlaʿ il-bāṣ?', 'When does the bus leave?', '🕘', null, { msa: ['مَتَى تُغَادِرُ الْحَافِلَةُ؟', 'matā tughādiru l-ḥāfila?'] }],
+      ['رايِح جايي.', 'rāyeḥ jāye.', 'Return (round trip).', '🔁', 'Literally “going, coming”.', { msa: ['ذَهَابٌ وَعَوْدَةٌ', 'dhahābun wa-ʿawda'] }],
+      ['عِنْدي حَجِز.', 'ʿindi ḥajiz.', 'I have a reservation.', '📋', null, { msa: ['عِنْدِي حَجْزٌ', 'ʿindī ḥajz'] }],
+      ['وَين مَوْقَف الباص؟', 'wēn mawʾaf il-bāṣ?', 'Where is the bus stop?', '🚏', null, { msa: ['أَيْنَ مَوْقِفُ الْحَافِلَةِ؟', 'ayna mawqifu l-ḥāfila?'] }],
+      ['وَدّيني عالأوتيل لَو سَمَحْت.', 'waddīni ʿal-ōtēl law samaḥt.', 'Take me to the hotel, please.', '🚕', null, { msa: ['خُذْنِي إِلَى الْفُنْدُقِ مِنْ فَضْلِكَ', 'khudhnī ilā l-funduq min faḍlika'] }],
+      ['الباص مِتْأَخِّر.', 'il-bāṣ mitʾakhkhir.', 'The bus is late.', '⌛', null, { msa: ['الْحَافِلَةُ مُتَأَخِّرَةٌ', 'al-ḥāfilatu mutaʾakhkhira'] }],
     ],
     grammar: {
-      title: 'Prepositions: إِلَى، مِنْ، بِـ، فِي',
-      body: `<table><tr><td><b>إِلَى</b></td><td><i>ilā</i></td><td>to</td><td>إِلَى الْقَاهِرَةِ — to Cairo</td></tr>
-<tr><td><b>مِنْ</b></td><td><i>min</i></td><td>from</td><td>مِنْ دُبَي — from Dubai</td></tr>
-<tr><td><b>بِـ</b></td><td><i>bi-</i></td><td>by, with</td><td>بِالْقِطَارِ — by train</td></tr>
-<tr><td><b>فِي</b></td><td><i>fī</i></td><td>in, at</td><td>فِي الْمَطَارِ — at the airport</td></tr></table>
-<p><b>بِـ</b> is a one-letter word, so it is <b>written joined</b> to the next word.</p>
-<p><b>Question words:</b> مَتَى (<i>matā</i>) when · أَيْنَ (<i>ayna</i>) where · كَمْ (<i>kam</i>) how much · مَاذَا (<i>mādhā</i>) what · كَيْفَ (<i>kayfa</i>) how.</p>`,
+      title: 'Going places: عَ، مِن، بـ',
+      body: `<table><tr><td><b>عَ / عَلى</b></td><td><i>ʿa / ʿala</i></td><td>to</td><td>عَ بَيْروت — to Beirut</td></tr>
+<tr><td><b>مِن</b></td><td><i>min</i></td><td>from</td><td>مِن الشّام — from Damascus</td></tr>
+<tr><td><b>بـ</b></td><td><i>b-</i></td><td>in / by</td><td>بالباص — by bus</td></tr></table>
+<p>Standard Arabic says إِلَى (ilā) for “to” and فِي (fī) for “in”.</p>
+<p><b>Question words:</b> وَين (wēn) where · إِيمْتى (ēmta) when · قَدّيش (ʾaddēsh) how much · شو (shu) what · كِيف (kīf) how · مين (mīn) who · لَيش (lēsh) why.</p>
+<p><b>Taxis:</b> agree on the price first: قَدّيش لَعَ الأوتيل؟ (ʾaddēsh la-ʿal-ōtēl?)</p>`,
     },
     dialogue: {
-      scene: 'At the ticket office in Alexandria.',
+      scene: 'At the bus station in Amman.',
       lines: [
-        ['Traveller', 'تَذْكِرَةٌ إِلَى الْقَاهِرَةِ مِنْ فَضْلِكَ.', 'tadhkiratun ilā l-qāhira min faḍlika.', 'A ticket to Cairo, please.'],
-        ['Clerk', 'ذَهَابٌ فَقَطْ أَمْ ذَهَابٌ وَعَوْدَةٌ؟', 'dhahābun faqaṭ am dhahābun wa-ʿawda?', 'One way or return?'],
-        ['Traveller', 'ذَهَابٌ وَعَوْدَةٌ. مَتَى يُغَادِرُ الْقِطَارُ؟', 'dhahābun wa-ʿawda. matā yughādiru l-qiṭār?', 'Return. When does the train leave?'],
-        ['Clerk', 'فِي السَّاعَةِ الْعَاشِرَةِ وَالنِّصْفِ.', 'fī s-sāʿati l-ʿāshirati wa-n-niṣf.', 'At half past ten.'],
-        ['Traveller', 'بِكَمِ التَّذْكِرَةُ؟', 'bi-kami t-tadhkira?', 'How much is the ticket?'],
-        ['Clerk', 'مِئَةُ جُنَيْهٍ.', 'miʾatu junayh.', 'One hundred pounds.'],
+        ['Traveller', 'بَدّي تَذْكَرة عَ إِرْبِد لَو سَمَحْت.', 'biddi tazkara ʿa Irbid law samaḥt.', 'A ticket to Irbid, please.'],
+        ['Clerk', 'رايِح بَسّ ولّا رايِح جايي؟', 'rāyeḥ bass walla rāyeḥ jāye?', 'One way or return?'],
+        ['Traveller', 'رايِح جايي. إِيمْتى بْيِطْلَع الباص؟', 'rāyeḥ jāye. ēmta byiṭlaʿ il-bāṣ?', 'Return. When does the bus leave?'],
+        ['Clerk', 'السّاعة عَشْرة ونُصّ.', 'is-sāʿa ʿashra w nuṣṣ.', 'At half past ten.'],
+        ['Traveller', 'قَدّيش التَّذْكَرة؟', 'ʾaddēsh it-tazkara?', 'How much is the ticket?'],
+        ['Clerk', 'تْلات دَنانير.', 'tlat danānīr.', 'Three dinars.'],
       ],
       questions: [
-        { q: 'When does the train leave?', options: ['10:30', '10:00', '11:30'], a: 0 },
+        { q: 'When does the bus leave?', options: ['10:30', '10:00', '11:30'], a: 0 },
         { q: 'What kind of ticket does the traveller buy?', options: ['Return', 'One way', 'First class'], a: 0 },
       ],
     },
     roleplay: {
       scene: 'You get into a taxi at the airport.',
       turns: [
-        { p: ['أَهْلًا! إِلَى أَيْنَ؟', 'ahlan! ilā ayna?', 'Hi! Where to?'], cue: 'Say: Take me to the hotel, please.', a: ['خُذْنِي إِلَى الْفُنْدُقِ مِنْ فَضْلِكَ', 'إِلَى الْفُنْدُقِ مِنْ فَضْلِكَ'], atr: 'khudhnī ilā l-funduq min faḍlika' },
-        { p: ['طَيِّب. هَلْ عِنْدَكَ أَمْتِعَة؟', 'ṭayyib. hal ʿindaka amtiʿa?', 'Okay. Do you have luggage?'], cue: 'Say: yes, one bag.', a: ['نَعَمْ، حَقِيبَةٌ وَاحِدَةٌ', 'نَعَمْ'], atr: 'naʿam, ḥaqībatun wāḥida' },
-        { p: ['وَصَلْنَا! هَذَا هُوَ الْفُنْدُقُ.', 'waṣalnā! hādhā huwa l-funduq.', "We've arrived! This is the hotel."], cue: 'Ask: how much?', a: ['بِكَمْ؟', 'كَمْ؟', 'كَمِ الْحِسَابُ؟'], atr: 'bi-kam?' },
+        { p: ['أَهْلا! لَوَين؟', 'ahla! la-wēn?', 'Hi! Where to?'], cue: 'Say: Take me to the hotel, please.', a: ['وَدّيني عالأوتيل لَو سَمَحْت', 'عالأوتيل لَو سَمَحْت', 'خُذْنِي إِلَى الْفُنْدُقِ مِنْ فَضْلِكَ'], atr: 'waddīni ʿal-ōtēl law samaḥt' },
+        { p: ['ماشي. عِنْدَك شَنَط؟', 'māshi. ʿindak shanaṭ?', 'Okay. Do you have bags?'], cue: 'Say: yes, one bag.', a: ['إي، شَنْطة وِحْدة', 'إي', 'نَعَمْ، حَقِيبَةٌ وَاحِدَةٌ'], atr: 'ē, shanṭa wiḥde' },
+        { p: ['وْصِلْنا! هاد الأوتيل.', 'wṣilna! hād il-ōtēl.', "We've arrived! This is the hotel."], cue: 'Ask: how much?', a: ['قَدّيش؟', 'بِقَدّيش؟', 'قَدّيش الحْساب؟', 'بِكَمْ؟'], atr: 'ʾaddēsh?' },
       ],
     },
   },
   {
     id: 'health',
-    title: 'الصِّحَّة',
+    title: 'الصِّحّة',
     subtitle: 'Feelings & health',
     icon: '🩺',
     goal: 'I can say how I feel and explain a simple health problem.',
     words: [
-      ['سَعِيد', 'saʿīd', 'happy', '😊'],
-      ['حَزِين', 'ḥazīn', 'sad', '😢'],
-      ['مُتْعَب', 'mutʿab', 'tired', '🥱'],
-      ['مَرِيض', 'marīḍ', 'ill / sick', '🤒'],
-      ['غَاضِب', 'ghāḍib', 'angry', '😠'],
-      ['خَائِف', 'khāʾif', 'afraid', '😨'],
-      ['رَأْس', 'raʾs', 'head', '🧠'],
-      ['بَطْن', 'baṭn', 'stomach / belly', '🤢'],
-      ['طَبِيب', 'ṭabīb', 'doctor', '🧑‍⚕️'],
-      ['دَوَاء', 'dawāʾ', 'medicine', '💊'],
-      ['أَلَم', 'alam', 'pain', '🤕'],
-      ['حُمَّى', 'ḥummā', 'fever', '🌡️'],
+      ['مَبْسوط', 'mabsūṭ', 'happy', '😊', 'Also means “pleased / doing well”.', { msa: ['سَعِيد', 'saʿīd'] }],
+      ['زَعْلان', 'zaʿlān', 'sad / upset', '😢', null, { msa: ['حَزِين', 'ḥazīn'] }],
+      ['تَعْبان', 'taʿbān', 'tired / unwell', '🥱', null, { msa: ['مُتْعَب', 'mutʿab'] }],
+      ['مَريض', 'marīḍ', 'ill / sick', '🤒', null, { msa: ['مَرِيض', 'marīḍ'] }],
+      ['مْعَصِّب', 'mʿaṣṣib', 'angry', '😠', null, { msa: ['غَاضِب', 'ghāḍib'] }],
+      ['خايِف', 'khāyef', 'afraid', '😨', null, { msa: ['خَائِف', 'khāʾif'] }],
+      ['راس', 'rās', 'head', '🧠', null, { msa: ['رَأْس', 'raʾs'] }],
+      ['بَطِن', 'baṭin', 'stomach / belly', '🤢', null, { msa: ['بَطْن', 'baṭn'], alt: ['بطن'] }],
+      ['دُكْتور', 'doktōr', 'doctor', '🧑‍⚕️', null, { msa: ['طَبِيب', 'ṭabīb'] }],
+      ['دَوا', 'dawa', 'medicine', '💊', null, { msa: ['دَوَاء', 'dawāʾ'] }],
+      ['وَجَع', 'wajaʿ', 'pain / ache', '🤕', null, { msa: ['أَلَم', 'alam'] }],
+      ['سُخونة', 'skhūne', 'fever', '🌡️', 'Also حَرارة (ḥarāra).', { msa: ['حُمَّى', 'ḥummā'], alt: ['حرارة'] }],
     ],
     phrases: [
-      ['كَيْفَ تَشْعُرُ؟', 'kayfa tashʿur?', 'How do you feel? (to a man)', '❓', 'To a woman: كَيْفَ تَشْعُرِينَ؟ (tashʿurīn)'],
-      ['أَنَا مَرِيضٌ.', 'anā marīḍ.', "I'm ill. (man)", '🤒', 'Woman: أَنَا مَرِيضَةٌ (marīḍa).', ['انا مريضة']],
-      ['عِنْدِي صُدَاعٌ.', 'ʿindī ṣudāʿ.', 'I have a headache.', '🤕'],
-      ['بَطْنِي يُؤْلِمُنِي.', 'baṭnī yuʾlimunī.', 'My stomach hurts.', '🤢'],
-      ['أَحْتَاجُ إِلَى طَبِيبٍ.', 'aḥtāju ilā ṭabīb.', 'I need a doctor.', '🧑‍⚕️'],
-      ['اُطْلُبُوا الْإِسْعَافَ!', 'uṭlubū l-isʿāf!', 'Call an ambulance!', '🚑'],
-      ['سَلَامَتُكَ!', 'salāmatuk!', 'Get well soon!', '💐', 'Literally “your safety”. Reply: اللَّهُ يُسَلِّمُكَ (allāhu yusallimuk).'],
+      ['كِيفَك هَلَّق؟', 'kīfak hallaʾ?', 'How are you feeling now?', '❓', null, { msa: ['كَيْفَ تَشْعُرُ الْآنَ؟', 'kayfa tashʿuru l-ān?'] }],
+      ['أَنا تَعْبان.', 'ana taʿbān.', "I'm not feeling well. (man)", '🤒', 'A woman says تَعْبانة (taʿbāne).', { msa: ['أَنَا مَرِيضٌ', 'anā marīḍ'], alt: ['أنا تعبانة', 'أنا مريض'] }],
+      ['عِنْدي وَجَع راس.', 'ʿindi wajaʿ rās.', 'I have a headache.', '🤕', null, { msa: ['عِنْدِي صُدَاعٌ', 'ʿindī ṣudāʿ'] }],
+      ['بَطْني عَم يوجَعْني.', 'baṭni ʿam yūjaʿni.', 'My stomach hurts.', '🤢', null, { msa: ['بَطْنِي يُؤْلِمُنِي', 'baṭnī yuʾlimunī'] }],
+      ['بَدّي دُكْتور.', 'biddi doktōr.', 'I need a doctor.', '🧑‍⚕️', null, { msa: ['أَحْتَاجُ إِلَى طَبِيبٍ', 'aḥtāju ilā ṭabīb'] }],
+      ['اِتْصْلوا بالإِسْعاف!', 'itṣlu bil-isʿāf!', 'Call an ambulance!', '🚑', null, { msa: ['اُطْلُبُوا الْإِسْعَافَ', 'uṭlubū l-isʿāf'] }],
+      ['سَلامْتَك!', 'salāmtak!', 'Get well soon!', '💐', 'Literally “your safety”. Reply: الله يْسَلْمَك (alla ysalmak).', { msa: ['سَلَامَتُكَ', 'salāmatuk'] }],
     ],
     grammar: {
-      title: 'Feelings, illness and "it hurts me"',
-      body: `<p>Feelings: <b>أَنَا</b> + adjective (+ <b>ة</b> if you're a woman):</p>
-<table><tr><td>أَنَا مُتْعَبٌ</td><td><i>anā mutʿab</i></td><td>I'm tired (m)</td></tr>
-<tr><td>أَنَا مُتْعَبَ<b>ةٌ</b></td><td><i>anā mutʿaba</i></td><td>I'm tired (f)</td></tr></table>
-<p>Illnesses use <b>عِنْدِي</b> (“I have”): عِنْدِي صُدَاعٌ (headache), عِنْدِي حُمَّى (fever).</p>
-<p><b>It hurts me:</b> body part + <b>يُؤْلِمُنِي</b> (m) / <b>تُؤْلِمُنِي</b> (f): رَأْسِي يُؤْلِمُنِي — “my head hurts me”.</p>`,
+      title: 'Feelings, illness and “it hurts me”',
+      body: `<p>Feelings: <b>أَنا</b> + adjective (+ <b>ة</b> if you're a woman):</p>
+<table><tr><td>أَنا تَعْبان</td><td><i>ana taʿbān</i></td><td>I'm unwell / tired (m)</td></tr>
+<tr><td>أَنا تَعْبان<b>ة</b></td><td><i>ana taʿbāne</i></td><td>(f)</td></tr>
+<tr><td>أَنا مَبْسوط</td><td><i>ana mabsūṭ</i></td><td>I'm happy</td></tr></table>
+<p>Illness uses <b>عِنْدي</b> (“I have”): عِنْدي سُخونة (fever), عِنْدي وَجَع راس (headache).</p>
+<p><b>It hurts me:</b> body part + <b>عَم يوجَعْني</b> (m) / <b>عَم توجَعْني</b> (f): راسي عَم يوجَعْني — “my head is hurting me”. Standard: يُؤْلِمُنِي.</p>`,
     },
     dialogue: {
       scene: 'At the pharmacy.',
       lines: [
-        ['Pharmacist', 'أَهْلًا، كَيْفَ أُسَاعِدُكَ؟', 'ahlan, kayfa usāʿiduka?', 'Hello, how can I help you?'],
-        ['Customer', 'أَنَا مَرِيضٌ. عِنْدِي صُدَاعٌ.', 'anā marīḍ. ʿindī ṣudāʿ.', "I'm ill. I have a headache."],
-        ['Pharmacist', 'هَلْ عِنْدَكَ حُمَّى؟', 'hal ʿindaka ḥummā?', 'Do you have a fever?'],
-        ['Customer', 'لَا، لَكِنْ بَطْنِي يُؤْلِمُنِي.', 'lā, lākin baṭnī yuʾlimunī.', 'No, but my stomach hurts.'],
-        ['Pharmacist', 'خُذْ هَذَا الدَّوَاءَ ثَلَاثَ مَرَّاتٍ فِي الْيَوْمِ.', 'khudh hādhā d-dawāʾa thalātha marrātin fī l-yawm.', 'Take this medicine three times a day.'],
-        ['Customer', 'شُكْرًا جَزِيلًا.', 'shukran jazīlan.', 'Thank you very much.'],
-        ['Pharmacist', 'سَلَامَتُكَ!', 'salāmatuk!', 'Get well soon!'],
+        ['Pharmacist', 'أَهْلا، كِيف فيني ساعْدَك؟', 'ahla, kīf fīni sāʿdak?', 'Hello, how can I help you?'],
+        ['Customer', 'أَنا تَعْبان. عِنْدي وَجَع راس.', 'ana taʿbān. ʿindi wajaʿ rās.', "I'm not well. I have a headache."],
+        ['Pharmacist', 'عِنْدَك سُخونة؟', 'ʿindak skhūne?', 'Do you have a fever?'],
+        ['Customer', 'لَأ، بَسّ بَطْني عَم يوجَعْني.', 'laʾ, bass baṭni ʿam yūjaʿni.', 'No, but my stomach hurts.'],
+        ['Pharmacist', 'خود هاد الدَّوا تْلات مَرّات باليَوم.', 'khōd hād id-dawa tlat marrāt bil-yōm.', 'Take this medicine three times a day.'],
+        ['Customer', 'شُكْرًا كْتير.', 'shukran ktīr.', 'Thank you very much.'],
+        ['Pharmacist', 'سَلامْتَك!', 'salāmtak!', 'Get well soon!'],
       ],
       questions: [
         { q: 'What hurts besides the head?', options: ['The stomach', 'The throat', 'The back'], a: 0 },
@@ -760,9 +768,9 @@ export default [
     roleplay: {
       scene: 'You visit a doctor.',
       turns: [
-        { p: ['أَهْلًا. كَيْفَ تَشْعُرُ؟', 'ahlan. kayfa tashʿur?', 'Hello. How do you feel?'], cue: "Say you're ill and have a headache.", a: ['أَنَا مَرِيضٌ. عِنْدِي صُدَاعٌ', 'عِنْدِي صُدَاعٌ', 'أَنَا مَرِيضَةٌ، عِنْدِي صُدَاعٌ'], atr: 'anā marīḍ. ʿindī ṣudāʿ' },
-        { p: ['هَلْ عِنْدَكَ حُمَّى؟', 'hal ʿindaka ḥummā?', 'Do you have a fever?'], cue: 'Say: no, but my stomach hurts.', a: ['لَا، لَكِنْ بَطْنِي يُؤْلِمُنِي', 'بَطْنِي يُؤْلِمُنِي'], atr: 'lā, lākin baṭnī yuʾlimunī' },
-        { p: ['خُذْ هَذَا الدَّوَاءَ. سَلَامَتُكَ!', 'khudh hādhā d-dawāʾ. salāmatuk!', 'Take this medicine. Get well soon!'], cue: 'Say thank you very much.', a: ['شُكْرًا جَزِيلًا', 'شُكْرًا'], atr: 'shukran jazīlan' },
+        { p: ['أَهْلا. شو في؟ كِيفَك؟', 'ahla. shu fī? kīfak?', "Hello. What's wrong? How are you?"], cue: "Say you're not well and have a headache.", a: ['أَنا تَعْبان، عِنْدي وَجَع راس', 'عِنْدي وَجَع راس', 'أَنا تَعْبانة، عِنْدي وَجَع راس', 'عِنْدِي صُدَاعٌ'], atr: 'ana taʿbān, ʿindi wajaʿ rās' },
+        { p: ['عِنْدَك سُخونة؟', 'ʿindak skhūne?', 'Do you have a fever?'], cue: 'Say: no, but my stomach hurts.', a: ['لَأ، بَسّ بَطْني عَم يوجَعْني', 'بَطْني عَم يوجَعْني', 'بَطْنِي يُؤْلِمُنِي'], atr: 'laʾ, bass baṭni ʿam yūjaʿni' },
+        { p: ['خود هاد الدَّوا. سَلامْتَك!', 'khōd hād id-dawa. salāmtak!', 'Take this medicine. Get well soon!'], cue: 'Say thank you very much.', a: ['شُكْرًا كْتير', 'شُكْرًا', 'الله يْسَلْمَك'], atr: 'shukran ktīr' },
       ],
     },
   },

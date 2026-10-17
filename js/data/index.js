@@ -8,9 +8,9 @@ import { normalize } from '../text.js';
 export const LANGS = {
   ar: {
     code: 'ar', name: 'Arabic', native: 'العربية', flag: '🇸🇦', dir: 'rtl',
-    tts: ['ar-SA', 'ar-EG', 'ar-AE', 'ar'], asr: 'ar-SA',
+    tts: ['ar-LB', 'ar-JO', 'ar-SY', 'ar-PS', 'ar-SA', 'ar-XA', 'ar-EG', 'ar'], asr: 'ar-LB',
     hasTranslit: true, scriptName: 'Alphabet', scriptIcon: 'أ',
-    variety: 'Modern Standard Arabic (فُصْحَى) — understood across the whole Arab world.',
+    variety: 'Spoken Levantine Arabic (شامي — Lebanon, Syria, Jordan, Palestine), with standard Arabic (📜) shown alongside for reading and writing.',
   },
   it: {
     code: 'it', name: 'Italian', native: 'Italiano', flag: '🇮🇹', dir: 'ltr',
@@ -24,10 +24,28 @@ export function itemId(lang, text) {
   return `${lang}:${normalize(text, lang).replace(/\s+/g, '_')}`;
 }
 
+// Phone voices speak standard Arabic and would read ق as “q”. In Levantine speech
+// ق is a glottal stop, so for audio we respell it as أ whenever the transliteration
+// shows no “q” (e.g. قَهْوة ʾahwe → أَهْوة).
+const spokenForms = new Map();
+function registerSpoken(text, tr) {
+  if (!text || !text.includes('ق') || /q/i.test(tr || '')) return;
+  spokenForms.set(text, text.replace(/ق/g, 'أ'));
+}
+
+/** The text to send to text-to-speech for `text` in `lang`. */
+export function spokenForm(lang, text) {
+  return (lang === 'ar' && spokenForms.get(text)) || text;
+}
+
 function toItem(lang, unitId, kind, tuple) {
   if (lang === 'ar') {
-    const [t, tr, en, e, n, alt] = tuple;
-    return { id: itemId(lang, t), lang, unit: unitId, kind, t, tr, en, e: e || '', n: n || '', alt: alt || [] };
+    const [t, tr, en, e, n, extra = {}] = tuple;
+    const msa = extra.msa && normalize(extra.msa[0], 'ar') !== normalize(t, 'ar') ? { t: extra.msa[0], tr: extra.msa[1] } : null;
+    // The standard Arabic form is always accepted as an answer too.
+    const alt = [...(extra.alt || []), ...(msa ? [msa.t] : [])];
+    registerSpoken(t, tr);
+    return { id: itemId(lang, t), lang, unit: unitId, kind, t, tr, en, e: e || '', n: n || '', alt, msa };
   }
   const [t, en, e, n, alt] = tuple;
   return { id: itemId(lang, t), lang, unit: unitId, kind, t, tr: '', en, e: e || '', n: n || '', alt: alt || [] };
@@ -39,6 +57,10 @@ function buildCourse(lang, rawUnits) {
     const words = u.words.map((w) => toItem(lang, u.id, 'word', w));
     const phrases = u.phrases.map((p) => toItem(lang, u.id, 'phrase', p));
     for (const it of [...words, ...phrases]) if (!items[it.id]) items[it.id] = it;
+    if (lang === 'ar') {
+      u.dialogue.lines.forEach((l) => registerSpoken(l[1], l[2]));
+      u.roleplay.turns.forEach((t) => { registerSpoken(t.p[0], t.p[1]); registerSpoken(t.a[0], t.atr); });
+    }
     const lines = u.dialogue.lines.map((l) =>
       lang === 'ar' ? { who: l[0], t: l[1], tr: l[2], en: l[3] } : { who: l[0], t: l[1], tr: '', en: l[2] });
     const turns = u.roleplay.turns.map((t) => ({

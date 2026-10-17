@@ -1,6 +1,6 @@
 # Lingua Path — learn Arabic 🇸🇦 & Italian 🇮🇹
 
-An interactive, gamified, **speaking-first** language course for Arabic (Modern Standard) and Italian. It covers all four skills (speaking, listening, reading, writing) and teaches the **writing systems**: a full Arabic alphabet track with handwriting practice, and an Italian sounds-and-spelling track.
+An interactive, gamified, **speaking-first** language course for **spoken Levantine Arabic** (with Modern Standard Arabic shown alongside) and Italian. It covers all four skills (speaking, listening, reading, writing) and teaches the **writing systems**: a full Arabic alphabet track with handwriting practice, and an Italian sounds-and-spelling track.
 
 It's a static web app: no build step, no backend, no dependencies. It works on desktop and mobile, can be installed as a PWA, and works offline once loaded.
 

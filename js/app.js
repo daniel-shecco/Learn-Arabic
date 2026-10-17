@@ -1,7 +1,7 @@
 // App shell: onboarding, home tabs (Learn, Script, Practice, Speak, Profile) and AI chat.
 import { h, clear, tl, modal, toast } from './ui/dom.js';
 import { createStore } from './state.js';
-import { COURSES, LANGS, ARABIC_SCRIPT, ITALIAN_SOUNDS } from './data/index.js';
+import { COURSES, LANGS, ARABIC_SCRIPT, ITALIAN_SOUNDS, spokenForm } from './data/index.js';
 import { buildLesson, buildReview, buildSpeakingDrill, buildListeningDrill, buildScriptLesson, buildSoundLesson } from './session.js';
 import { runSession } from './ui/player.js';
 import { dueQueue, masteryLevel, retrievability } from './srs.js';
@@ -32,7 +32,7 @@ function showTranslit() {
 }
 
 function say(text, { slow = false, l = lang() } = {}) {
-  return speak(text, { langs: COURSES[l].meta.tts, rate: (slow ? 0.6 : 1) * S().settings.rate, voice: S().settings.voices[l] });
+  return speak(spokenForm(l, text), { langs: COURSES[l].meta.tts, rate: (slow ? 0.6 : 1) * S().settings.rate, voice: S().settings.voices[l] });
 }
 
 function audioBtn(text, opts = {}) {
@@ -235,7 +235,7 @@ function wordListModal(u) {
     const lvl = masteryLevel(L.cards[id]);
     return h('div.word-row', { onclick: () => say(it.t) },
       h('span.emoji.sm', it.e || '•'),
-      h('div.word-main', tl(it.t, c.lang, 'md'), it.tr ? h('div.translit', it.tr) : null),
+      h('div.word-main', tl(it.t, c.lang, 'md'), it.tr ? h('div.translit', it.tr) : null, it.msa ? h('div.msa.small', '📜 ', tl(it.msa.t, 'ar')) : null),
       h('div.word-en', it.en),
       h('div.strength', { title: `Strength ${lvl}/5` }, Array.from({ length: 5 }, (_, i) => h(`i${i < lvl ? '.on' : ''}`))));
   };
@@ -371,7 +371,7 @@ function practiceTab() {
       const lvl = masteryLevel(L.cards[id]);
       return h('div.word-row', { onclick: () => say(it.t) },
         h('span.emoji.sm', it.e || '•'),
-        h('div.word-main', tl(it.t, c.lang, 'md'), it.tr && showTranslit() !== 'never' ? h('div.translit', it.tr) : null),
+        h('div.word-main', tl(it.t, c.lang, 'md'), it.tr && showTranslit() !== 'never' ? h('div.translit', it.tr) : null, it.msa ? h('div.msa.small', '📜 ', tl(it.msa.t, 'ar')) : null),
         h('div.word-en', it.en),
         h('div.strength', { title: `Strength ${lvl}/5` }, Array.from({ length: 5 }, (_, i) => h(`i${i < lvl ? '.on' : ''}`))));
     })));

@@ -41,7 +41,14 @@ function prompt(text, sub) {
 }
 
 function solutionOf(item) {
-  return { t: item.t, tr: item.tr, en: item.en };
+  return { t: item.t, tr: item.tr, en: item.en, msa: item.msa || null };
+}
+
+/** “📜 Standard Arabic: …” line shown under spoken (Levantine) items. */
+export function msaEl(ctx, msa) {
+  if (!msa) return null;
+  return h('div.msa', { title: 'Modern Standard Arabic — the written / formal form', onclick: (e) => { e.stopPropagation(); ctx.say(msa.t); } },
+    h('span.msa-label', '📜 Standard: '), tl(msa.t, 'ar'), ctx.showTranslit() !== 'never' ? h('span.msa-tr', ` ${msa.tr}`) : null);
 }
 
 function choiceGrid(options, render, onSelect, { cols = 1 } = {}) {
@@ -80,6 +87,7 @@ export function intro(ex, ctx) {
       h('div.target-row', tl(it.t, ctx.lang, 'xl'), audioBtn(ctx, it.t, { auto: true }), audioBtn(ctx, it.t, { slow: true })),
       translitEl(ctx, it.tr),
       h('div.meaning', it.en),
+      msaEl(ctx, it.msa),
       it.n ? h('div.note', '💡 ', it.n) : null),
     ctx.speakingOn() ? miniMic(ctx, it) : null);
 }

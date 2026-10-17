@@ -150,3 +150,16 @@ test('AI partner defaults to Haiku, and old installs are switched once', () => {
   s.save();
   assert.equal(createStore(old).state.settings.aiModel, 'claude-sonnet-5-5');
 });
+
+test('Levantine: ق is respelled for the voice, and speech matches either sound', async () => {
+  const { spokenForm, COURSES: C } = await import('../js/data/index.js');
+  assert.equal(spokenForm('ar', 'قَهْوة'), 'أَهْوة');            // ʾahwe
+  assert.equal(spokenForm('ar', 'مَرْحَبا'), 'مَرْحَبا');         // no ق: unchanged
+  assert.equal(spokenForm('it', 'cinque'), 'cinque');
+  // Recogniser may write the glottal-stop pronunciation with أ or ء.
+  assert.ok(scoreSpeech(['بدي أهوة لو سمحت'], 'بَدّي قَهْوة لَو سَمَحْت', 'ar').score > 0.99);
+  assert.ok(scoreSpeech(['بدي قهوة لو سمحت'], 'بَدّي قَهْوة لَو سَمَحْت', 'ar').score > 0.99);
+  // Standard Arabic answers are accepted for spoken items.
+  const coffee = Object.values(C.ar.items).find((i) => i.t.startsWith('بَدّي قَهْوة'));
+  assert.equal(checkTyped('أريد قهوة من فضلك', [coffee.t, ...coffee.alt], 'ar').result, 'correct');
+});

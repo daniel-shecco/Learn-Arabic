@@ -101,6 +101,11 @@ export function checkTyped(input, accepted, lang) {
   return { result: 'wrong', best, score: Math.max(0, bestScore) };
 }
 
+/** Arabic comparison for speech: Levantine ق (ʾ) and hamza/alif spellings match. */
+function speechNormArabic(s) {
+  return normalizeArabic(s).replace(/[قء]/g, 'ا');
+}
+
 /**
  * Score a speech-recognition transcript against target sentence(s).
  * Recognisers drop accents/diacritics and punctuation, so compare leniently.
@@ -108,7 +113,7 @@ export function checkTyped(input, accepted, lang) {
 export function scoreSpeech(transcripts, accepted, lang) {
   const heard = (Array.isArray(transcripts) ? transcripts : [transcripts]).filter(Boolean);
   const answers = Array.isArray(accepted) ? accepted : [accepted];
-  const norm = (s) => lang === 'ar' ? normalizeArabic(s) : normalizeLatin(s, { keepAccents: false });
+  const norm = (s) => lang === 'ar' ? speechNormArabic(s) : normalizeLatin(s, { keepAccents: false });
   let best = { score: 0, heard: heard[0] || '', target: answers[0] };
   for (const h of heard) {
     for (const a of answers) {
@@ -123,7 +128,7 @@ export function scoreSpeech(transcripts, accepted, lang) {
 
 /** Mark each target word as heard or missed (for feedback chips). */
 export function wordDiff(heard, target, lang) {
-  const norm = (s) => lang === 'ar' ? normalizeArabic(s) : normalizeLatin(s, { keepAccents: false });
+  const norm = (s) => lang === 'ar' ? speechNormArabic(s) : normalizeLatin(s, { keepAccents: false });
   const hw = norm(heard).split(' ').filter(Boolean);
   return tokenize(target).map((w) => {
     const n = norm(w);
