@@ -1,0 +1,12 @@
+{
+  "appId": "com.linguapath.app",
+  "appName": "Lingua Path",
+  "webDir": "www",
+  "backgroundColor": "#f7f8fc",
+  "android": {
+    "allowMixedContent": false
+  },
+  "ios": {
+    "contentInset": "never"
+  }
+}

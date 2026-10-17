@@ -9,7 +9,7 @@ import {
   levelFromXp, levelTitle, unitProgress, isUnitUnlocked, isLessonUnlocked, isScriptUnlocked,
   scriptProgress, ACHIEVEMENTS, todayXp, xpHistory, checkAchievements,
 } from './gamify.js';
-import { speak, voicesFor, ttsSupported, asrSupported, listen, stopSpeaking } from './speech.js';
+import { speak, voicesFor, ttsSupported, asrSupported, listen, stopSpeaking, isNative } from './speech.js';
 import { setSfx } from './sfx.js';
 import { arabicForms, shuffle } from './text.js';
 import { createTracer } from './ui/tracer.js';
@@ -524,6 +524,7 @@ function settingsPanel() {
   const toggle = (val, onchange) => h('input', { type: 'checkbox', checked: val, onchange: (e) => onchange(e.target.checked) });
 
   const voiceSel = (code) => {
+    if (isNative) return h('small.muted', `Uses your phone's ${LANGS[code].name} voice. No sound? Install it in your phone's text-to-speech settings.`);
     const vs = voicesFor(COURSES[code].meta.tts);
     if (!vs.length) return h('small.warn', `No ${LANGS[code].name} voice found on this device. Install one in your OS speech settings for audio.`);
     return select(s.voices[code] || '', [['', 'Automatic'], ...vs.map((v) => [v.name, `${v.name} (${v.lang})`])], (v) => set((x) => { x.voices[code] = v; }));
@@ -552,16 +553,26 @@ function settingsPanel() {
     field('Theme', select(s.theme, [['auto', 'Match system'], ['light', 'Light'], ['dark', 'Dark']], (v) => { set((x) => { x.theme = v; }); render(); })),
     field('Unlock all units', toggle(s.unlockAll, (v) => set((x) => { x.unlockAll = v; })), 'For learners who already know some of the language.'),
     h('h3', 'AI conversation partner (optional)'),
-    field('Anthropic API key', keyInput, 'Stored only in this browser and sent only to api.anthropic.com. Each conversation turn is billed to your API account.'),
+    field('Anthropic API key', keyInput, 'Stored only on this device and sent only to api.anthropic.com. Each conversation turn is billed to your API account.'),
     field('Model', select(s.aiModel, AI_MODELS.map((m) => [m.id, m.label]), (v) => set((x) => { x.aiModel = v; }))),
     h('h3', 'Your data'),
     h('div.row',
-      h('button.btn.ghost.small', { type: 'button', onclick: () => {
+      h('button.btn.ghost.small', { type: 'button', onclick: async () => {
+        if (isNative) {
+          // File downloads don't work inside the app, so copy the backup instead.
+          try { await navigator.clipboard.writeText(store.export()); toast('Backup copied — paste it into a note or email to keep it safe.', 'good', 4000); } catch { toast('Could not copy the backup.', 'bad'); }
+          return;
+        }
         const blob = new Blob([store.export()], { type: 'application/json' });
         const a = h('a', { href: URL.createObjectURL(blob), download: `lingua-path-backup-${new Date().toISOString().slice(0, 10)}.json` });
         a.click();
       } }, '⬇️ Export progress'),
-      h('button.btn.ghost.small', { type: 'button', onclick: () => fileIn.click() }, '⬆️ Import progress'), fileIn,
+      h('button.btn.ghost.small', { type: 'button', onclick: () => {
+        if (!isNative) return fileIn.click();
+        const text = window.prompt('Paste your backup text here:');
+        if (!text) return;
+        try { store.import(text); toast('Progress restored!', 'good'); render(); } catch (err) { toast(err.message, 'bad'); }
+      } }, '⬆️ Import progress'), fileIn,
       h('button.btn.danger.small', { type: 'button', onclick: () => {
         const m = modal(h('div.center', h('h3', 'Reset all progress?'), h('p.muted', 'This deletes XP, streaks and all learned words for both languages. Export a backup first if unsure.'),
           h('div.row.center', h('button.btn.ghost', { type: 'button', onclick: () => m.close() }, 'Cancel'),
@@ -574,6 +585,43 @@ function settingsPanel() {
 
 render();
 
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+if (isNative) {
+  setupNativeShell();
+} else if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
+/** Native app chrome: Android back button and status bar colours. */
+function setupNativeShell() {
+  const Cap = window.Capacitor;
+  const App = Cap.registerPlugin('App');
+  const StatusBar = Cap.registerPlugin('StatusBar');
+  document.documentElement.classList.add('native');
+
+  App.addListener('backButton', () => {
+    const modalClose = document.querySelector('.modal-wrap .modal-close');
+    if (modalClose) return modalClose.click();
+    const quit = document.querySelector('.player-head .icon-btn');
+    if (quit) return quit.click();
+    if (tab !== 'learn') { tab = 'learn'; render(); return; }
+    App.minimizeApp().catch(() => {});
+  });
+  // A new day may have started while the app sat in the background.
+  App.addListener('resume', () => { if (lang() && !document.querySelector('.player, .modal-wrap')) render(); });
+
+  const paintStatusBar = () => {
+    const bg = getComputedStyle(document.body).backgroundColor;
+    const dark = document.documentElement.dataset.theme === 'dark'
+      || (!document.documentElement.dataset.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    StatusBar.setStyle({ style: dark ? 'DARK' : 'LIGHT' }).catch(() => {});
+    if (Cap.getPlatform() === 'android') StatusBar.setBackgroundColor({ color: rgbToHex(bg) }).catch(() => {});
+  };
+  paintStatusBar();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paintStatusBar);
+  store.subscribe(() => setTimeout(paintStatusBar, 0));
+}
+
+function rgbToHex(rgb) {
+  const m = rgb.match(/\d+/g) || [247, 248, 252];
+  return '#' + m.slice(0, 3).map((n) => Number(n).toString(16).padStart(2, '0')).join('');
 }

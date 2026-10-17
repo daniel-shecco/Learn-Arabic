@@ -2,6 +2,14 @@
 let ctx;
 let enabled = true;
 
+// Vibration feedback in the native app.
+const Cap = typeof window !== 'undefined' ? window.Capacitor : null;
+const Haptics = Cap?.isNativePlatform?.() ? Cap.registerPlugin('Haptics') : null;
+function buzz(type) {
+  if (!Haptics || !enabled) return;
+  (type === 'tap' ? Haptics.impact({ style: 'LIGHT' }) : Haptics.notification({ type })).catch(() => {});
+}
+
 export function setSfx(on) { enabled = on; }
 
 function tone(freq, start, dur, type = 'sine', gain = 0.12) {
@@ -19,9 +27,9 @@ function tone(freq, start, dur, type = 'sine', gain = 0.12) {
 }
 
 export const sfx = {
-  correct() { if (!enabled) return; try { tone(660, 0, 0.12); tone(880, 0.09, 0.18); } catch { /* audio blocked */ } },
-  wrong() { if (!enabled) return; try { tone(220, 0, 0.18, 'triangle'); tone(180, 0.12, 0.22, 'triangle'); } catch { /* audio blocked */ } },
-  tap() { if (!enabled) return; try { tone(520, 0, 0.05, 'sine', 0.05); } catch { /* audio blocked */ } },
+  correct() { buzz('SUCCESS'); if (!enabled) return; try { tone(660, 0, 0.12); tone(880, 0.09, 0.18); } catch { /* audio blocked */ } },
+  wrong() { buzz('ERROR'); if (!enabled) return; try { tone(220, 0, 0.18, 'triangle'); tone(180, 0.12, 0.22, 'triangle'); } catch { /* audio blocked */ } },
+  tap() { buzz('tap'); if (!enabled) return; try { tone(520, 0, 0.05, 'sine', 0.05); } catch { /* audio blocked */ } },
   complete() { if (!enabled) return; try { [523, 659, 784, 1046].forEach((f, i) => tone(f, i * 0.11, 0.25)); } catch { /* audio blocked */ } },
   combo() { if (!enabled) return; try { tone(988, 0, 0.08); tone(1318, 0.07, 0.12); } catch { /* audio blocked */ } },
 };

@@ -1,6 +1,13 @@
 // Speech: text-to-speech (listening), speech recognition (speaking),
 // and a recorder fallback so learners can compare themselves with the model.
 
+// Inside the Capacitor app (Android / iOS), the WebView's speech APIs are
+// missing or unreliable, so we use the native speech engines via plugins.
+const Cap = typeof window !== 'undefined' ? window.Capacitor : null;
+export const isNative = !!Cap?.isNativePlatform?.();
+const NativeTTS = isNative ? Cap.registerPlugin('TextToSpeech') : null;
+const NativeASR = isNative ? Cap.registerPlugin('SpeechRecognition') : null;
+
 const synth = typeof window !== 'undefined' ? window.speechSynthesis : null;
 let voices = [];
 
@@ -14,7 +21,7 @@ if (synth) {
 }
 
 export function ttsSupported() {
-  return !!synth;
+  return isNative || !!synth;
 }
 
 export function voicesFor(langCodes) {
@@ -43,6 +50,7 @@ function pickVoice(langCodes, preferredName) {
  * @param {{langs: string[], rate?: number, voice?: string}} opts
  */
 export function speak(text, { langs, rate = 0.9, voice } = {}) {
+  if (isNative) return nativeSpeak(text, langs, rate);
   return new Promise((resolve) => {
     if (!synth || !text) return resolve(false);
     synth.cancel();
@@ -61,7 +69,25 @@ export function speak(text, { langs, rate = 0.9, voice } = {}) {
   });
 }
 
+async function nativeSpeak(text, langs, rate) {
+  if (!text) return false;
+  try {
+    await NativeTTS.stop().catch(() => {});
+    // Prefer the most specific supported locale (e.g. ar-SA, then ar).
+    let lang = langs[0];
+    for (const l of langs) {
+      const { supported } = await NativeTTS.isLanguageSupported({ lang: l }).catch(() => ({ supported: false }));
+      if (supported) { lang = l; break; }
+    }
+    await NativeTTS.speak({ text, lang, rate, pitch: 1, volume: 1, category: 'playback' });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function stopSpeaking() {
+  if (isNative) { NativeTTS.stop().catch(() => {}); return; }
   synth?.cancel();
 }
 
@@ -70,14 +96,67 @@ export function stopSpeaking() {
 const SR = typeof window !== 'undefined' ? (window.SpeechRecognition || window.webkitSpeechRecognition) : null;
 
 export function asrSupported() {
-  return !!SR;
+  return isNative || !!SR;
 }
 
 /**
  * Listen once. Resolves { transcripts: string[], error?: string }.
  * Returns a controller with .stop() to end early.
  */
-export function listen(lang, { onInterim, maxMs = 8000 } = {}) {
+export function listen(lang, opts = {}) {
+  if (isNative) return nativeListen(lang, opts);
+  return webListen(lang, opts);
+}
+
+function nativeListen(lang, { onInterim, maxMs = 8000 } = {}) {
+  let stopFn = () => {};
+  const promise = (async () => {
+    try {
+      const { available } = await NativeASR.available();
+      if (!available) return { transcripts: [], error: 'unsupported' };
+      let perm = await NativeASR.checkPermissions();
+      if (perm.speechRecognition !== 'granted') perm = await NativeASR.requestPermissions();
+      if (perm.speechRecognition !== 'granted') return { transcripts: [], error: 'not-allowed' };
+    } catch {
+      return { transcripts: [], error: 'unsupported' };
+    }
+    return new Promise((resolve) => {
+      let matches = [];
+      let settled = false;
+      let silence;
+      const handles = [];
+      const finish = async (error) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(maxTimer);
+        clearTimeout(silence);
+        await NativeASR.stop().catch(() => {});
+        handles.forEach((h) => h.remove?.());
+        resolve({ transcripts: matches, error: matches.length ? undefined : error });
+      };
+      stopFn = () => finish('no-speech');
+      const maxTimer = setTimeout(() => finish('no-speech'), maxMs);
+      Promise.all([
+        NativeASR.addListener('partialResults', (d) => {
+          if (d?.matches?.length) {
+            matches = d.matches.map((m) => m.trim()).filter(Boolean);
+            onInterim?.(matches[0]);
+            // Stop shortly after the learner stops talking.
+            clearTimeout(silence);
+            silence = setTimeout(() => finish(), 1400);
+          }
+        }),
+        NativeASR.addListener('listeningState', (d) => { if (d?.status === 'stopped') setTimeout(() => finish('no-speech'), 300); }),
+      ]).then((hs) => handles.push(...hs));
+      NativeASR.start({ language: lang, maxResults: 5, partialResults: true, popup: false })
+        .then((r) => { if (r?.matches?.length) { matches = r.matches; finish(); } })
+        .catch(() => finish('start-failed'));
+    });
+  })();
+  return { promise, stop: () => stopFn() };
+}
+
+function webListen(lang, { onInterim, maxMs = 8000 } = {}) {
   let rec;
   let stop = () => {};
   const promise = new Promise((resolve) => {
