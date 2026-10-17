@@ -5,9 +5,9 @@
 const SDK_URL = 'https://cdn.jsdelivr.net/npm/@anthropic-ai/sdk@0.130.0/+esm';
 
 export const AI_MODELS = [
-  { id: 'claude-opus-5-5', label: 'Claude Opus 5.5 (best quality)' },
-  { id: 'claude-sonnet-5-5', label: 'Claude Sonnet 5.5 (faster, cheaper)' },
   { id: 'claude-haiku-5-5', label: 'Claude Haiku 5.5 (fastest, cheapest)' },
+  { id: 'claude-sonnet-5-5', label: 'Claude Sonnet 5.5 (better Arabic, mid price)' },
+  { id: 'claude-opus-5-5', label: 'Claude Opus 5.5 (best quality, most expensive)' },
 ];
 
 export const SCENARIOS = [

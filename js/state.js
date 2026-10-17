@@ -21,6 +21,7 @@ function langDefaults() {
 export function defaults() {
   return {
     version: 1,
+    migrations: { haikuDefault: true },
     activeLang: null,
     settings: {
       dailyGoal: 50,
@@ -31,7 +32,7 @@ export function defaults() {
       unlockAll: false,
       voices: {},
       apiKey: '',
-      aiModel: 'claude-opus-5-5',
+      aiModel: 'claude-haiku-5-5',
       theme: 'auto',
     },
     profile: {
@@ -60,7 +61,15 @@ export function createStore(storage = globalThis.localStorage) {
   let state = defaults();
   try {
     const raw = storage && storage.getItem(KEY);
-    if (raw) state = merge(defaults(), JSON.parse(raw));
+    if (raw) {
+      state = merge(defaults(), JSON.parse(raw));
+      // One-time switch of existing installs from Opus to Haiku (cheaper AI partner).
+      const saved = JSON.parse(raw);
+      if (!saved.migrations?.haikuDefault) {
+        state.settings.aiModel = 'claude-haiku-5-5';
+        state.migrations = { ...saved.migrations, haikuDefault: true };
+      }
+    }
   } catch { /* corrupt or unavailable storage: start fresh */ }
 
   const listeners = new Set();

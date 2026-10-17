@@ -138,3 +138,15 @@ test('seeded rng is deterministic', () => {
   const a = seededRng(42), b = seededRng(42);
   assert.equal(a(), b());
 });
+
+test('AI partner defaults to Haiku, and old installs are switched once', () => {
+  assert.equal(createStore(memStorage()).state.settings.aiModel, 'claude-haiku-5-5');
+  const old = memStorage();
+  old.setItem('lingua-path.v1', JSON.stringify({ version: 1, settings: { aiModel: 'claude-opus-5-5' } }));
+  const s = createStore(old);
+  assert.equal(s.state.settings.aiModel, 'claude-haiku-5-5');
+  // After the switch, the learner's own later choice sticks.
+  s.state.settings.aiModel = 'claude-sonnet-5-5';
+  s.save();
+  assert.equal(createStore(old).state.settings.aiModel, 'claude-sonnet-5-5');
+});
