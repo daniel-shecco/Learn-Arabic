@@ -12,18 +12,32 @@ const NO_REQUEUE = new Set(['intro', 'letter_intro', 'vowel_intro', 'rule', 'dia
 const SPEAK_TYPES = new Set(['speak', 'roleplay']);
 
 /**
- * @param {object} app   { root, store, course, lang, showTranslit, voiceFor }
- * @param {object} opts  { title, exercises, onFinish(summary), record(summary) }
+ * @param {object} app   { root, store, course, lang, showTranslit }
+ * @param {object} opts
+ *   title, exercises, record(summary), onExit()
+ *   resume      saved snapshot to continue from (see snapshot())
+ *   onProgress  called with a snapshot whenever the learner moves on, so an
+ *               unfinished lesson survives quitting or the app being closed
+ *   onExercise  called with (exercise, result) after each answered/seen step
+ *   onDone      called once when the lesson is completed
  */
-export function runSession(app, { title, exercises, record, onExit }) {
+export function runSession(app, { title, exercises, record, onExit, resume, onProgress, onExercise, onDone }) {
   const { store, course, lang } = app;
   const settings = store.state.settings;
-  const queue = exercises.slice();
-  const requeued = new WeakSet();
-  let idx = 0;
-  let combo = 0, bestCombo = 0, xp = 0, graded = 0, correct = 0, mistakes = 0;
-  let speakingOff = !settings.speaking;
-  const t0 = Date.now();
+  // `src[i]` is the index in `exercises` of queue[i]; it lets us save and restore
+  // the exact queue, including re-queued mistakes.
+  const src = resume ? resume.order.slice() : exercises.map((_, i) => i);
+  const queue = src.map((i) => exercises[i]);
+  const requeued = new Set(resume?.requeued || []);
+  let idx = resume?.idx || 0;
+  let { combo = 0, bestCombo = 0, xp = 0, graded = 0, correct = 0, mistakes = 0 } = resume || {};
+  let speakingOff = resume ? resume.speakingOff : !settings.speaking;
+  const t0 = Date.now() - (resume?.elapsed || 0);
+  if (speakingOff) queue.forEach((ex, i) => { if (ex.type === 'roleplay') queue[i] = { ...ex, type: 'roleplay_text' }; });
+
+  function snapshot() {
+    return { idx, order: src.slice(), requeued: [...requeued], combo, bestCombo, xp, graded, correct, mistakes, speakingOff, elapsed: Date.now() - t0, total: exercises.length };
+  }
 
   const progress = h('div.progress-fill');
   const comboEl = h('div.combo');
@@ -40,11 +54,13 @@ export function runSession(app, { title, exercises, record, onExit }) {
   function confirmQuit() {
     if (idx === 0) return exit();
     const m = modal(h('div.center',
-      h('h3', 'Quit this lesson?'),
-      h('p.muted', 'Your progress in this lesson will be lost (words you practised are still saved).'),
+      h('h3', 'Take a break?'),
+      h('p.muted', onProgress
+        ? `Your place is saved (step ${idx + 1} of ${queue.length}). You'll continue from here next time.`
+        : 'This practice session isn\'t saved, but everything you practised is.'),
       h('div.row.center',
         h('button.btn.ghost', { type: 'button', onclick: () => m.close() }, 'Keep learning'),
-        h('button.btn.danger', { type: 'button', onclick: () => { m.close(); exit(); } }, 'Quit'))));
+        h('button.btn', { type: 'button', onclick: () => { m.close(); exit(); } }, onProgress ? 'Save & exit' : 'Exit'))));
   }
   function exit() { stopSpeaking(); document.removeEventListener('keydown', onKey); onExit?.(); }
 
@@ -84,7 +100,7 @@ export function runSession(app, { title, exercises, record, onExit }) {
       speakingOff = true;
       // Drop remaining speaking-only items from the queue (keep roleplay as typed version).
       for (let i = queue.length - 1; i > idx; i--) {
-        if (queue[i].type === 'speak') queue.splice(i, 1);
+        if (queue[i].type === 'speak') { queue.splice(i, 1); src.splice(i, 1); }
         else if (queue[i].type === 'roleplay') queue[i] = { ...queue[i], type: 'roleplay_text' };
       }
       updateProgress();
@@ -100,7 +116,7 @@ export function runSession(app, { title, exercises, record, onExit }) {
   function render() {
     if (idx >= queue.length) return finish();
     const ex = queue[idx];
-    if (ex.type === 'speak' && speakingOff) { queue.splice(idx, 1); return render(); }
+    if (ex.type === 'speak' && speakingOff) { queue.splice(idx, 1); src.splice(idx, 1); return render(); }
     phase = 'answer';
     checkFn = null;
     clear(body);
@@ -121,6 +137,7 @@ export function runSession(app, { title, exercises, record, onExit }) {
     body.scrollTop = 0;
     if (ex.item?.id && ex.type === 'intro') store.touch(lang, ex.item.id);
     updateProgress();
+    onProgress?.(snapshot());
   }
 
   function skipCurrent() {
@@ -132,6 +149,7 @@ export function runSession(app, { title, exercises, record, onExit }) {
   function handleResult(r) {
     const ex = queue[idx];
     phase = 'feedback';
+    onExercise?.(ex, r);
     for (const g of r.grades || []) store.grade(lang, g.id, g.q);
     const isSpeak = SPEAK_TYPES.has(ex.type) || r.kind === 'speak';
     if (isSpeak) { store.state.profile.stats.spoken++; store.state.langs[lang].spoken++; }
@@ -153,10 +171,10 @@ export function runSession(app, { title, exercises, record, onExit }) {
       if (!r.soft) mistakes++;
       xp += r.soft ? 4 : 0;
       sfx.wrong();
-      if (!NO_REQUEUE.has(ex.type) && !requeued.has(ex)) {
-        const again = { ...ex };
-        requeued.add(again);
-        queue.push(again);
+      if (!NO_REQUEUE.has(ex.type) && !requeued.has(src[idx])) {
+        requeued.add(src[idx]);
+        queue.push({ ...ex });
+        src.push(src[idx]);
       }
     }
     store.save();
@@ -191,6 +209,7 @@ export function runSession(app, { title, exercises, record, onExit }) {
   }
 
   function advance() {
+    if (phase === 'continue') onExercise?.(queue[idx], { seen: true });
     stopSpeaking();
     idx++;
     render();
@@ -206,6 +225,7 @@ export function runSession(app, { title, exercises, record, onExit }) {
     store.state.profile.stats.lessons++;
     if (perfect) store.state.profile.stats.perfect++;
     const summary = { xp, accuracy, perfect, bestCombo, minutes: (Date.now() - t0) / 60000 };
+    onDone?.();
     record?.(summary);
     const fresh = checkAchievements(store.state);
     store.save();

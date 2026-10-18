@@ -163,3 +163,16 @@ test('Levantine: ق is respelled for the voice, and speech matches either sound'
   const coffee = Object.values(C.ar.items).find((i) => i.t.startsWith('بَدّي قَهْوة'));
   assert.equal(checkTyped('أريد قهوة من فضلك', [coffee.t, ...coffee.alt], 'ar').result, 'correct');
 });
+
+test('an unfinished lesson and letter progress survive a restart', () => {
+  const storage = memStorage();
+  const s = createStore(storage);
+  s.state.langs.ar.inProgress = { spec: { lang: 'ar', kind: 'script', gi: 0, seed: 7 }, title: 'Alphabet', snap: { idx: 12, order: [0, 1, 2], total: 40 } };
+  s.state.langs.ar.letters['ب'] = { seen: 1, right: 2, wrong: 0 };
+  s.state.ui.tab = 'script';
+  s.save();
+  const again = createStore(storage);
+  assert.equal(again.state.langs.ar.inProgress.snap.idx, 12);
+  assert.equal(again.state.langs.ar.letters['ب'].right, 2);
+  assert.equal(again.state.ui.tab, 'script');
+});

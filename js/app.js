@@ -12,14 +12,20 @@ import {
 import { speak, voicesFor, ttsSupported, asrSupported, listen, stopSpeaking, isNative as nativeSpeech } from './speech.js';
 import { isNative, plugin, platform } from './native.js';
 import { setSfx } from './sfx.js';
-import { arabicForms, shuffle } from './text.js';
+import { arabicForms, shuffle, seededRng } from './text.js';
 import { createTracer } from './ui/tracer.js';
 import { AI_MODELS, SCENARIOS, partnerReply } from './ai.js';
 import { ITALIAN_ACCENTS } from './data/it/sounds.js';
 
 const store = createStore();
 const root = document.getElementById('app');
-let tab = 'learn';
+let tab = S().ui?.tab || 'learn';
+
+function setTab(id) {
+  tab = id;
+  store.update((s) => { s.ui = { ...s.ui, tab: id }; });
+  render();
+}
 
 function S() { return store.state; }
 function lang() { return S().activeLang; }
@@ -68,8 +74,7 @@ function renderOnboarding() {
   } }, h('b', name), h('small', `${v} XP · ${sub}`)));
   const go = h('button.btn.primary.wide', { type: 'button', disabled: true, onclick: () => {
     store.update((s) => { s.activeLang = choice.lang; s.settings.dailyGoal = choice.goal; if (!s.langs[choice.lang].started) s.langs[choice.lang].started = Date.now(); });
-    tab = choice.lang === 'ar' && !Object.keys(S().langs.ar.script).length ? 'script' : 'learn';
-    render();
+    setTab(choice.lang === 'ar' && !Object.keys(S().langs.ar.script).length ? 'script' : 'learn');
     if (choice.lang === 'ar') toast('Tip: start with the Alphabet track — you\'ll read your first words in minutes!', 'info', 5000);
   } }, 'Start learning');
   const warnings = [];
@@ -120,7 +125,7 @@ function nav() {
     ['profile', '👤', 'Profile'],
   ];
   return h('nav.bottom-nav', items.map(([id, icon, label, badge]) => h(`button.nav-btn${tab === id ? '.active' : ''}`, {
-    type: 'button', onclick: () => { tab = id; render(); }, 'aria-current': tab === id ? 'page' : null,
+    type: 'button', onclick: () => setTab(id), 'aria-current': tab === id ? 'page' : null,
   }, h('span.nav-icon', { lang: id === 'script' ? lang() : null }, icon), h('span.nav-label', label), badge ? h('span.nav-badge', badge > 99 ? '99+' : String(badge)) : null)));
 }
 
@@ -145,7 +150,7 @@ function learnTab() {
   const c = course();
   const L = S().langs[c.lang];
   const intro = c.lang === 'ar' && scriptProgress(S(), 'ar', ARABIC_SCRIPT.GROUPS) < 0.3
-    ? h('div.callout', { onclick: () => { tab = 'script'; render(); } },
+    ? h('div.callout', { onclick: () => setTab('script') },
       h('b', '✍️ New to the Arabic alphabet? '), 'Do a few Alphabet lessons alongside these units. Transliteration is shown until you can read comfortably.')
     : null;
   // First unlocked-but-unfinished lesson = "continue" target.
@@ -160,10 +165,11 @@ function learnTab() {
     h('div', h('small', 'Continue'), h('b', `${next.u.subtitle} · ${next.u.lessons[next.li].title}`)),
     h('span.cc-go', '▶')) : null;
 
+  const resume = resumeCard(['lesson']);
   return h('div.learn',
     h('p.variety', c.meta.variety),
     intro,
-    continueCard,
+    resume || continueCard,
     h('div.path', c.units.map((u) => unitCard(u))));
 }
 
@@ -205,15 +211,79 @@ function startLesson(u, li) {
   // Interleave a few due items from previous units (spaced retrieval).
   const earlier = new Set(c.units.slice(0, u.index).flatMap((x) => [...x.wordIds, ...x.phraseIds]));
   const reviewIds = dueQueue(L.cards, Date.now(), 50).filter((id) => earlier.has(id)).slice(0, 3);
-  const ex = buildLesson(c, u, li, { speaking: S().settings.speaking, reviewIds });
-  const les = u.lessons[li];
-  startSession(`${u.subtitle} · ${les.title}`, ex, (sum) => {
-    const rec = L.lessons[les.id] || { done: 0, best: 0 };
-    rec.done += 1;
-    rec.best = Math.max(rec.best, sum.accuracy);
-    rec.last = Date.now();
-    L.lessons[les.id] = rec;
+  startResumable({ lang: c.lang, kind: 'lesson', unit: u.index, li, reviewIds });
+}
+
+// ---------------------------------------------------------------- resumable lessons
+// Lessons are rebuilt from a small spec plus a random seed, so an unfinished one
+// continues exactly where the learner left off — even after the app was closed.
+
+function buildFromSpec(spec) {
+  const c = COURSES[spec.lang];
+  const L = S().langs[spec.lang];
+  const opts = { rng: seededRng(spec.seed), speaking: spec.speaking };
+  if (spec.kind === 'lesson') {
+    const u = c.units[spec.unit];
+    const les = u.lessons[spec.li];
+    return {
+      title: `${u.subtitle} · ${les.title}`,
+      exercises: buildLesson(c, u, spec.li, { ...opts, reviewIds: spec.reviewIds }),
+      record: (sum) => {
+        const rec = L.lessons[les.id] || { done: 0, best: 0 };
+        rec.done += 1;
+        rec.best = Math.max(rec.best, sum.accuracy);
+        rec.last = Date.now();
+        L.lessons[les.id] = rec;
+      },
+    };
+  }
+  const script = spec.kind === 'script';
+  const g = (script ? ARABIC_SCRIPT : ITALIAN_SOUNDS).GROUPS[spec.gi];
+  return {
+    title: `${script ? 'Alphabet' : 'Sounds'} · ${g.title}`,
+    exercises: script ? buildScriptLesson(ARABIC_SCRIPT, spec.gi, opts) : buildSoundLesson(ITALIAN_SOUNDS, spec.gi, opts),
+    record: () => { const r = L.script[g.id] || { done: 0 }; r.done++; r.last = Date.now(); L.script[g.id] = r; },
+  };
+}
+
+const sameLesson = (a, b) => !!a && !!b && ['lang', 'kind', 'unit', 'li', 'gi'].every((k) => a[k] === b[k]);
+
+function startResumable(base) {
+  const L = S().langs[base.lang];
+  const saved = sameLesson(L.inProgress?.spec, base) ? L.inProgress : null;
+  const spec = saved ? saved.spec : { ...base, seed: Math.floor(Math.random() * 2 ** 31), speaking: S().settings.speaking };
+  const built = buildFromSpec(spec);
+  // Only resume if the lesson content is unchanged since it was saved.
+  const resume = saved && saved.snap?.total === built.exercises.length ? saved.snap : null;
+  if (resume && resume.idx > 0) toast(`Welcome back — continuing from step ${resume.idx + 1}.`, 'info');
+  runSession(appCtx(), {
+    title: built.title, exercises: built.exercises, record: built.record, onExit: render, resume,
+    onProgress: (snap) => { L.inProgress = { spec, title: built.title, snap }; store.save(); },
+    onDone: () => { L.inProgress = null; },
+    onExercise: spec.kind === 'script' ? trackLetter : null,
   });
+}
+
+/** Per-letter alphabet progress, saved as you go. */
+function trackLetter(ex, r) {
+  const ch = ex.letter;
+  if (!ch) return;
+  const book = S().langs.ar.letters || (S().langs.ar.letters = {});
+  const e = book[ch] || (book[ch] = { seen: Date.now(), right: 0, wrong: 0 });
+  if (r.seen) return;
+  if (r.correct) e.right++; else e.wrong++;
+}
+
+/** "Continue where you left off" card for an unfinished lesson of the given kinds. */
+function resumeCard(kinds) {
+  const L = S().langs[lang()];
+  const p = L.inProgress;
+  if (!p || !kinds.includes(p.spec.kind) || !p.snap) return null;
+  const pct = Math.round((p.snap.idx / Math.max(1, p.snap.order.length)) * 100);
+  return h('button.continue-card', { type: 'button', onclick: () => startResumable(p.spec) },
+    h('span.cc-icon', '⏯️'),
+    h('div', h('small', `Continue where you left off · ${pct}%`), h('b', p.title)),
+    h('span.cc-go', '▶'));
 }
 
 function grammarModal(u) {
@@ -254,28 +324,35 @@ function scriptTab() {
 function arabicScriptTab() {
   const G = ARABIC_SCRIPT.GROUPS;
   const Ls = S().langs.ar.script;
+  const letters = S().langs.ar.letters || {};
   const pct = scriptProgress(S(), 'ar', G);
+  const seenCount = Object.keys(ARABIC_SCRIPT.LETTERS).filter((ch) => letters[ch]).length;
   return h('div.script',
+    resumeCard(['script']),
     h('div.callout',
       h('b', 'How Arabic writing works: '),
       'right-to-left · 28 letters · most letters connect to the next one and change shape (start, middle, end) · short vowels are small marks, usually left out in everyday texts but always shown here.'),
     h('div.progress', h('div.progress-fill', { style: { width: `${pct * 100}%` } })),
+    h('p.muted.small', `${seenCount} of ${Object.keys(ARABIC_SCRIPT.LETTERS).length} letters and signs learned · ${G.filter((g) => Ls[g.id]?.done).length} of ${G.length} lessons complete`),
     h('div.group-list', G.map((g, gi) => {
       const ok = isScriptUnlocked(S(), 'ar', gi, G);
       const done = Ls[g.id]?.done || 0;
-      return h(`button.group-card${done ? '.done' : ''}${ok ? '' : '.locked'}`, { type: 'button', disabled: !ok, onclick: () => {
-        startSession(`Alphabet · ${g.title}`, buildScriptLesson(ARABIC_SCRIPT, gi, { speaking: S().settings.speaking }), () => {
-          const r = Ls[g.id] || { done: 0 }; r.done++; r.last = Date.now(); Ls[g.id] = r;
-        });
-      } },
-      h('span.g-icon', { lang: 'ar' }, g.icon),
-      h('div.g-main', h('b', `${gi + 1}. ${g.title}`), h('div.g-letters', { lang: 'ar', dir: 'rtl' }, g.letters.join(' '))),
-      h('span.g-state', ok ? (done ? '✓' : '▶') : '🔒'));
+      const met = g.letters.filter((ch) => letters[ch]).length;
+      return h(`button.group-card${done ? '.done' : ''}${ok ? '' : '.locked'}`, { type: 'button', disabled: !ok, onclick: () => startResumable({ lang: 'ar', kind: 'script', gi }) },
+        h('span.g-icon', { lang: 'ar' }, g.icon),
+        h('div.g-main', h('b', `${gi + 1}. ${g.title}`), h('div.g-letters', { lang: 'ar', dir: 'rtl' }, g.letters.join(' ')),
+          !done && met ? h('small.muted', `${met}/${g.letters.length} letters started`) : null),
+        h('span.g-state', ok ? (done ? '✓' : '▶') : '🔒'));
     })),
     h('h3', 'Letter chart'),
     h('p.muted.small', 'Tap a letter to hear it, see its forms and practise writing it.'),
-    h('div.letter-chart', { dir: 'rtl' }, Object.entries(ARABIC_SCRIPT.LETTERS).map(([ch, L]) => h('button.letter-tile', { type: 'button', onclick: () => letterModal(ch) },
-      h('span.glyph', { lang: 'ar' }, ch), h('small', L.name)))),
+    h('div.letter-chart', { dir: 'rtl' }, Object.entries(ARABIC_SCRIPT.LETTERS).map(([ch, L]) => {
+      const e = letters[ch];
+      const cls = !e ? '' : e.right >= 3 && e.right > e.wrong ? '.strong' : '.seen';
+      return h(`button.letter-tile${cls}`, { type: 'button', onclick: () => letterModal(ch), title: e ? `Practised: ${e.right} right, ${e.wrong} to review` : 'Not learned yet' },
+        h('span.glyph', { lang: 'ar' }, ch), h('small', L.name));
+    })),
+    h('p.muted.small', '🟦 started · 🟩 strong — progress is saved after every step.'),
     h('h3', 'Vowel marks'),
     h('div.letter-chart', { dir: 'rtl' }, ARABIC_SCRIPT.VOWELS.map((v) => h('button.letter-tile', { type: 'button', onclick: () => say(v.sample, { l: 'ar' }) },
       h('span.glyph', { lang: 'ar' }, v.sample), h('small', `${v.name} · ${v.sampleTr}`)))));
@@ -310,6 +387,7 @@ function letterModal(ch) {
         const s = tracer.score();
         tracer.reveal();
         S().profile.stats.traced++;
+        trackLetter({ letter: ch }, { correct: s >= 0.55 });
         store.save();
         result.textContent = s >= 0.55 ? `✅ ${Math.round(s * 100)}% — beautiful!` : `${Math.round(s * 100)}% — compare with the model and try again.`;
       } }, 'Check'))));
@@ -319,15 +397,12 @@ function italianSoundsTab() {
   const G = ITALIAN_SOUNDS.GROUPS;
   const Ls = S().langs.it.script;
   return h('div.script',
+    resumeCard(['sound']),
     h('div.callout', h('b', 'Italian is (almost) written as it sounds. '), 'Learn these ~10 rules and you can read aloud — and spell — nearly any word you hear.'),
     h('div.group-list', G.map((g, gi) => {
       const ok = isScriptUnlocked(S(), 'it', gi, G);
       const done = Ls[g.id]?.done || 0;
-      return h(`button.group-card${done ? '.done' : ''}${ok ? '' : '.locked'}`, { type: 'button', disabled: !ok, onclick: () => {
-        startSession(`Sounds · ${g.title}`, buildSoundLesson(ITALIAN_SOUNDS, gi, { speaking: S().settings.speaking }), () => {
-          const r = Ls[g.id] || { done: 0 }; r.done++; r.last = Date.now(); Ls[g.id] = r;
-        });
-      } }, h('span.g-icon', g.icon), h('div.g-main', h('b', `${gi + 1}. ${g.title}`), h('div.g-letters', g.examples.slice(0, 4).map((e) => e[0]).join(' · '))), h('span.g-state', ok ? (done ? '✓' : '▶') : '🔒'));
+      return h(`button.group-card${done ? '.done' : ''}${ok ? '' : '.locked'}`, { type: 'button', disabled: !ok, onclick: () => startResumable({ lang: 'it', kind: 'sound', gi }) }, h('span.g-icon', g.icon), h('div.g-main', h('b', `${gi + 1}. ${g.title}`), h('div.g-letters', g.examples.slice(0, 4).map((e) => e[0]).join(' · '))), h('span.g-state', ok ? (done ? '✓' : '▶') : '🔒'));
     })),
     h('h3', 'Alphabet'),
     h('p.muted.small', 'The Italian alphabet has 21 letters; j, k, w, x, y appear only in foreign words. Tap to hear the letter names.'),
@@ -577,7 +652,7 @@ function settingsPanel() {
       h('button.btn.danger.small', { type: 'button', onclick: () => {
         const m = modal(h('div.center', h('h3', 'Reset all progress?'), h('p.muted', 'This deletes XP, streaks and all learned words for both languages. Export a backup first if unsure.'),
           h('div.row.center', h('button.btn.ghost', { type: 'button', onclick: () => m.close() }, 'Cancel'),
-            h('button.btn.danger', { type: 'button', onclick: () => { m.close(); store.reset(); tab = 'learn'; render(); } }, 'Reset everything'))));
+            h('button.btn.danger', { type: 'button', onclick: () => { m.close(); store.reset(); setTab('learn'); } }, 'Reset everything'))));
       } }, '🗑 Reset')),
     h('p.muted.small', 'Progress is saved automatically on this device. Use Export/Import to move it to another device.'));
 }
@@ -603,7 +678,7 @@ function setupNativeShell() {
     if (modalClose) return modalClose.click();
     const quit = document.querySelector('.player-head .icon-btn');
     if (quit) return quit.click();
-    if (tab !== 'learn') { tab = 'learn'; render(); return; }
+    if (tab !== 'learn') { setTab('learn'); return; }
     App.minimizeApp?.().catch(() => {});
   });
   // A new day may have started while the app sat in the background.

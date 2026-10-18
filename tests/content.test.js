@@ -125,3 +125,13 @@ test('Italian sound lessons build', () => {
     assert.ok(!buildSoundLesson(ITALIAN_SOUNDS, gi, { speaking: false }).some((e) => e.type === 'speak'));
   });
 });
+
+test('lessons rebuild identically from the same seed (needed to resume a saved lesson)', () => {
+  const same = (build) => assert.equal(JSON.stringify(build(seededRng(1234))), JSON.stringify(build(seededRng(1234))));
+  same((rng) => buildScriptLesson(ARABIC_SCRIPT, 3, { rng }));
+  same((rng) => buildSoundLesson(ITALIAN_SOUNDS, 2, { rng }));
+  for (const lang of ['ar', 'it']) {
+    const c = COURSES[lang];
+    for (let li = 0; li < 4; li++) same((rng) => buildLesson(c, c.units[4], li, { rng, reviewIds: [] }));
+  }
+});

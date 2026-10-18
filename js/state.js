@@ -15,7 +15,9 @@ export function dayDiff(a, b) {
 }
 
 function langDefaults() {
-  return { lessons: {}, script: {}, cards: {}, xp: 0, spoken: 0, started: null };
+  // letters: per-letter alphabet progress { ch: { seen, right, wrong } }
+  // inProgress: the unfinished lesson to resume { spec, title, snap }
+  return { lessons: {}, script: {}, letters: {}, cards: {}, xp: 0, spoken: 0, started: null, inProgress: null };
 }
 
 export function defaults() {
@@ -23,6 +25,7 @@ export function defaults() {
     version: 1,
     migrations: { haikuDefault: true },
     activeLang: null,
+    ui: { tab: 'learn' },
     settings: {
       dailyGoal: 50,
       translit: 'auto', // auto | always | tap | never

@@ -431,3 +431,7 @@ html.native body { -webkit-touch-callout: none; }
 .msa-tr { font-style: italic; }
 .msa.small { padding: 0 6px; font-size: .8rem; }
 .msa.small .tl[lang="ar"] { font-size: 1rem; }
+
+/* Alphabet progress on the letter chart */
+.letter-tile.seen { border-color: var(--primary); background: var(--primary-soft); }
+.letter-tile.strong { border-color: var(--good); background: var(--good-soft); }
